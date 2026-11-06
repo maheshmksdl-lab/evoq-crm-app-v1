@@ -14,12 +14,12 @@ interface Lead {
 }
 
 const STATUS_CFG: Record<LeadStatus, { bg: string; text: string; dot: string }> = {
-  "New":         { bg: "#EFF6FF", text: "#0C2472", dot: "#1D4ED8" },
-  "Contacted":   { bg: "#E3ECFC", text: "#1D4ED8", dot: "#3B82F6" },
-  "In Progress": { bg: "#E3ECFC", text: "#0C2472", dot: "#60A5FA" },
-  "Qualified":   { bg: "#DCFCE7", text: "#166534", dot: "#16A34A" },
-  "Lost":        { bg: "#FEF2F2", text: "#991B1B", dot: "#EF4444" },
-  "Unqualified": { bg: "#F1F5F9", text: "#475569", dot: "#94A3B8" },
+  "New":         { bg: "var(--surface)", text: "var(--ink)", dot: "#1D4ED8" },
+  "Contacted":   { bg: "var(--tint)", text: "var(--link)", dot: "#3B82F6" },
+  "In Progress": { bg: "var(--tint)", text: "var(--ink)", dot: "#60A5FA" },
+  "Qualified":   { bg: "var(--st-green-bg)", text: "var(--st-green-fg)", dot: "#16A34A" },
+  "Lost":        { bg: "var(--st-red-bg)", text: "var(--st-red-fg)", dot: "#EF4444" },
+  "Unqualified": { bg: "var(--surface-subtle)", text: "var(--fg-2)", dot: "#94A3B8" },
 };
 
 const AVATAR_PAL = ["#0C2472", "#1D4ED8", "#3B82F6", "#60A5FA"];
@@ -52,7 +52,7 @@ export default function LeadGridView({ leads }: Props) {
           <div
             key={lead.id}
             onClick={() => router.push(`/leads/${lead.id}`)}
-            className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group overflow-hidden"
+            className="bg-card rounded-2xl border border-line shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group overflow-hidden"
           >
             {/* Status top bar */}
             <div className="h-[3px] w-full" style={{ backgroundColor: cfg.dot }} />
@@ -68,18 +68,18 @@ export default function LeadGridView({ leads }: Props) {
                   {avInit}
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="font-heading text-[13.5px] font-bold text-slate-900 truncate group-hover:text-[#1D4ED8] transition-colors">
+                  <p className="font-heading text-[13.5px] font-bold text-slate-900 truncate group-hover:text-link transition-colors">
                     {lead.name}
                   </p>
                   {lead.company && (
                     <p className="text-[11.5px] text-slate-500 truncate flex items-center gap-1 mt-0.5">
-                      <Buildings size={11} color="#93C5FD" weight="duotone" />
+                      <Buildings size={11} color="#60A5FA" weight="duotone" />
                       {lead.company}
                     </p>
                   )}
                 </div>
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                  <button onClick={e => e.stopPropagation()} className="p-1 rounded-lg hover:bg-[#EFF6FF] transition-colors">
+                  <button onClick={e => e.stopPropagation()} className="p-1 rounded-lg hover:bg-surface transition-colors">
                     <DotsThreeVertical size={15} color="#94A3B8" weight="duotone" />
                   </button>
                 </div>
@@ -98,24 +98,24 @@ export default function LeadGridView({ leads }: Props) {
               <div className="space-y-1.5">
                 {lead.email ? (
                   <div className="flex items-center gap-2 text-[11.5px] text-slate-500">
-                    <Envelope size={12} color="#93C5FD" weight="duotone" className="flex-shrink-0" />
+                    <Envelope size={12} color="#60A5FA" weight="duotone" className="flex-shrink-0" />
                     <span className="truncate text-[#3B82F6] font-medium">{lead.email}</span>
                   </div>
                 ) : null}
                 {lead.mobile ? (
                   <div className="flex items-center gap-2 text-[11.5px] text-slate-500">
-                    <Phone size={12} color="#93C5FD" weight="duotone" className="flex-shrink-0" />
+                    <Phone size={12} color="#60A5FA" weight="duotone" className="flex-shrink-0" />
                     <span className="font-mono">{lead.mobile}</span>
                   </div>
                 ) : null}
                 {!lead.email && !lead.mobile && (
-                  <p className="text-[11px] text-slate-300 italic">No contact info</p>
+                  <p className="text-[11.5px] text-fg-3 italic">No contact info</p>
                 )}
               </div>
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-[#EFF6FF] bg-[#EFF6FF]/50">
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-line-soft bg-surface/50">
               {/* Owner */}
               <Tooltip title={lead.owner}>
                 <div className="flex items-center gap-1.5">
@@ -129,12 +129,12 @@ export default function LeadGridView({ leads }: Props) {
               {/* Metadata pills */}
               <div className="flex items-center gap-1.5">
                 {lead.leadSource && (
-                  <span className="flex items-center gap-0.5 text-[10px] text-slate-400 bg-white border border-[#E3ECFC] px-1.5 py-0.5 rounded-full">
-                    <TrendUp size={10} color="#93C5FD" weight="duotone" />{lead.leadSource}
+                  <span className="flex items-center gap-0.5 text-[11px] text-slate-400 bg-card border border-line px-1.5 py-0.5 rounded-full">
+                    <TrendUp size={10} color="#60A5FA" weight="duotone" />{lead.leadSource}
                   </span>
                 )}
                 {lead.rating && (
-                  <span className="flex items-center gap-0.5 text-[10px] text-slate-400 bg-white border border-[#E3ECFC] px-1.5 py-0.5 rounded-full">
+                  <span className="flex items-center gap-0.5 text-[11px] text-slate-400 bg-card border border-line px-1.5 py-0.5 rounded-full">
                     <Star size={10} color="#F59E0B" weight="duotone" />{lead.rating}
                   </span>
                 )}

@@ -17,16 +17,16 @@ type FeedItem = {
 };
 
 const feed: FeedItem[] = [
-  { id:1, Icon:TrendUp,       iconColor:"#0C2472", iconBg:"#E3ECFC", title:"Matrix Corp moved to Negotiation",   user:"PM SDL",  initials:"PM", avatarBg:"#1D4ED8", ownerKey:"PM SDL",  time:"5m ago"  },
-  { id:2, Icon:UserPlus,      iconColor:"#1D4ED8", iconBg:"#EFF6FF", title:"New lead added: James Wilson",        user:"Sarah K", initials:"SK", avatarBg:"#3B82F6", ownerKey:"Sarah K", time:"23m ago" },
-  { id:3, Icon:PencilSimple,  iconColor:"#3B82F6", iconBg:"#EFF6FF", title:"Sweany Inc contact updated",          user:"PM SDL",  initials:"PM", avatarBg:"#1D4ED8", ownerKey:"PM SDL",  time:"1h ago"  },
-  { id:4, Icon:CheckCircle,   iconColor:"#60A5FA", iconBg:"#E3ECFC", title:"Task: Follow up with Apex done",      user:"John D",  initials:"JD", avatarBg:"#60A5FA", ownerKey:"John D",  time:"2h ago"  },
-  { id:5, Icon:CurrencyDollar,iconColor:"#1D4ED8", iconBg:"#EFF6FF", title:"New deal created: Pixel Studios",     user:"Ria M",   initials:"RM", avatarBg:"#0C2472", ownerKey:"Ria M",   time:"3h ago"  },
+  { id:1, Icon:TrendUp,       iconColor:"var(--ink)", iconBg:"var(--tint)", title:"Matrix Corp moved to Negotiation",   user:"PM SDL",  initials:"PM", avatarBg:"#1D4ED8", ownerKey:"PM SDL",  time:"5m ago"  },
+  { id:2, Icon:UserPlus,      iconColor:"var(--link)", iconBg:"var(--surface)", title:"New lead added: James Wilson",        user:"Sarah K", initials:"SK", avatarBg:"#3B82F6", ownerKey:"Sarah K", time:"23m ago" },
+  { id:3, Icon:PencilSimple,  iconColor:"#3B82F6", iconBg:"var(--surface)", title:"Sweany Inc contact updated",          user:"PM SDL",  initials:"PM", avatarBg:"#1D4ED8", ownerKey:"PM SDL",  time:"1h ago"  },
+  { id:4, Icon:CheckCircle,   iconColor:"#60A5FA", iconBg:"var(--tint)", title:"Task: Follow up with Apex done",      user:"John D",  initials:"JD", avatarBg:"#60A5FA", ownerKey:"John D",  time:"2h ago"  },
+  { id:5, Icon:CurrencyDollar,iconColor:"var(--link)", iconBg:"var(--surface)", title:"New deal created: Pixel Studios",     user:"Ria M",   initials:"RM", avatarBg:"#0C2472", ownerKey:"Ria M",   time:"3h ago"  },
 ];
 
 export default function ActivityFeed() {
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm h-full flex flex-col">
+    <div className="bg-card rounded-2xl p-5 border border-slate-100 shadow-sm h-full flex flex-col">
       <div className="mb-4">
         <h3 className="text-[14px] font-bold text-slate-900">Recent Activity</h3>
         <p className="text-[11px] text-slate-400 mt-0.5">Live team updates</p>
@@ -42,7 +42,7 @@ export default function ActivityFeed() {
                   <Icon size={14} color={item.iconColor} weight="duotone" />
                 </div>
                 {idx < feed.length - 1 && (
-                  <div className="w-px flex-1 bg-[#E3ECFC] mt-1 mb-0 h-[14px]" />
+                  <div className="w-px flex-1 bg-tint mt-1 mb-0 h-[14px]" />
                 )}
               </div>
 
@@ -57,9 +57,9 @@ export default function ActivityFeed() {
                   >
                     {item.initials}
                   </Avatar>
-                  <span className="text-[10px] text-slate-400 font-medium">{item.user}</span>
-                  <span className="text-[10px] text-slate-300">·</span>
-                  <span className="text-[10px] text-slate-400">{item.time}</span>
+                  <span className="text-[11px] text-slate-400 font-medium">{item.user}</span>
+                  <span className="text-[11px] text-fg-3">·</span>
+                  <span className="text-[11px] text-slate-400">{item.time}</span>
                 </div>
               </div>
             </div>
@@ -67,7 +67,7 @@ export default function ActivityFeed() {
         })}
       </div>
 
-      <button className="mt-4 w-full text-center text-[11.5px] text-[#1D4ED8] font-bold hover:text-[#0C2472] py-2 rounded-xl hover:bg-[#EFF6FF] transition-all duration-150">
+      <button className="mt-4 w-full text-center text-[11.5px] text-link font-bold hover:text-ink py-2 rounded-xl hover:bg-surface transition-all duration-150">
         View all activity →
       </button>
     </div>

@@ -53,9 +53,9 @@ const OPERATORS: { value: FilterOperator; label: string; noValue?: boolean }[] =
 
 const SELECT_SX = {
   fontSize: "0.78rem",
-  bgcolor: "#EFF6FF",                   /* Surface bg */
+  bgcolor: "var(--surface)",                   /* Surface bg */
   borderRadius: "8px",
-  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#E3ECFC", borderWidth: 1.5 },
+  "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--line)", borderWidth: 1.5 },
   "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#60A5FA" },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#1D4ED8", borderWidth: 2 },
   "&.Mui-focused": { boxShadow: "0 0 0 2px #93C5FD" },
@@ -96,13 +96,13 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}
-      PaperProps={{ sx: { width: 560, display: "flex", flexDirection: "column", bgcolor: "#F8FAFF", boxShadow: "-12px 0 48px rgba(12,36,114,0.12)" } }}>
+      PaperProps={{ sx: { width: 560, display: "flex", flexDirection: "column", bgcolor: "var(--surface-subtle)", boxShadow: "-12px 0 48px rgba(12,36,114,0.12)" } }}>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-b border-line flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] flex items-center justify-center">
-            <FunnelSimple size={18} color="#1D4ED8" weight="duotone" />
+          <div className="w-9 h-9 rounded-xl bg-surface flex items-center justify-center">
+            <FunnelSimple size={18} color="var(--link)" weight="duotone" />
           </div>
           <div>
             <h2 className="font-heading text-[15px] font-bold text-slate-900 tracking-tight">Filters</h2>
@@ -111,8 +111,8 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
         </div>
         <Tooltip title="Close">
           <IconButton size="small" onClick={onClose}
-            sx={{ borderRadius: "9px", border: "1.5px solid #E3ECFC", "&:hover": { bgcolor: "#EFF6FF" } }}>
-            <X size={17} color="#64748B" weight="duotone" />
+            sx={{ borderRadius: "9px", border: "1px solid var(--line)", "&:hover": { bgcolor: "var(--surface)" } }}>
+            <X size={17} color="var(--fg-3)" weight="duotone" />
           </IconButton>
         </Tooltip>
       </div>
@@ -131,7 +131,7 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
                       className={`text-[11px] font-bold px-3 py-1 rounded-full border transition-all ${
                         row.logic === l
                           ? "bg-[#1D4ED8] text-white border-[#1D4ED8]"
-                          : "bg-[#E3ECFC] text-[#0C2472] border-[#E3ECFC] hover:bg-[#1D4ED8]/10 hover:text-[#1D4ED8]"
+                          : "bg-tint text-ink border-line hover:bg-[#1D4ED8]/10 hover:text-link"
                       }`}>
                       {l}
                     </button>
@@ -140,9 +140,9 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
               )}
 
               {/* Filter row */}
-              <div className="bg-white rounded-2xl border border-[#E3ECFC] p-4 shadow-sm">
+              <div className="bg-card rounded-2xl border border-line p-4 shadow-sm">
                 {idx === 0 && (
-                  <p className="font-heading text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Where</p>
+                  <p className="font-heading text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3">Where</p>
                 )}
 
                 <div className="flex items-start gap-2">
@@ -167,18 +167,18 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
 
                     {/* Value */}
                     {!noValue && (
-                      <div className="col-span-2 flex items-center gap-2 bg-[#EFF6FF] border border-[#E3ECFC] rounded-xl px-3 py-1.5 focus-within:border-[#1D4ED8] focus-within:border-2 focus-within:shadow-[0_0_0_2px_#93C5FD] transition-all">
+                      <div className="col-span-2 flex items-center gap-2 bg-surface border border-line rounded-xl px-3 py-1.5 focus-within:border-[#1D4ED8] focus-within:border-2 focus-within:shadow-[0_0_0_2px_#93C5FD] transition-all">
                         <InputBase
                           fullWidth
                           placeholder="Enter value…"
                           value={row.value}
                           onChange={e => update(row.id, { value: e.target.value })}
-                          sx={{ fontSize: "0.78rem", color: "#334155", "& input::placeholder": { color: "#94A3B8", opacity: 1 } }}
+                          sx={{ fontSize: "0.78rem", color: "var(--fg)", "& input::placeholder": { color: "#94A3B8", opacity: 1 } }}
                         />
                       </div>
                     )}
                     {noValue && (
-                      <div className="col-span-2 flex items-center justify-center py-2 rounded-xl bg-[#EFF6FF] border border-[#E3ECFC]">
+                      <div className="col-span-2 flex items-center justify-center py-2 rounded-xl bg-surface border border-line">
                         <p className="text-[11.5px] text-slate-400 italic">No value needed for this condition</p>
                       </div>
                     )}
@@ -187,7 +187,7 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
                   {/* Remove */}
                   <Tooltip title="Remove filter">
                     <IconButton size="small" onClick={() => removeRow(row.id)}
-                      sx={{ borderRadius: "8px", mt: 0.5, flexShrink: 0, "&:hover": { bgcolor: "#FEF2F2" } }}>
+                      sx={{ borderRadius: "8px", mt: 0.5, flexShrink: 0, "&:hover": { bgcolor: "var(--st-red-bg)" } }}>
                       <Trash size={15} color="#EF4444" weight="duotone" />
                     </IconButton>
                   </Tooltip>
@@ -199,15 +199,15 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
 
         {/* Add row */}
         <button onClick={addRow}
-          className="flex items-center gap-2 text-[12.5px] font-semibold text-[#1D4ED8] hover:text-[#0C2472] py-2 px-3 rounded-xl hover:bg-[#EFF6FF] transition-all w-full">
+          className="flex items-center gap-2 text-[12.5px] font-semibold text-link hover:text-ink py-2 px-3 rounded-xl hover:bg-surface transition-all w-full">
           <Plus size={14} weight="duotone" />
           Add filter row
         </button>
 
         {/* Empty / tip */}
-        <div className="bg-white rounded-2xl border border-[#E3ECFC] p-4 shadow-sm">
+        <div className="bg-card rounded-2xl border border-line p-4 shadow-sm">
           <div className="flex items-start gap-2.5">
-            <SlidersHorizontal size={16} color="#93C5FD" weight="duotone" className="mt-0.5 flex-shrink-0" />
+            <SlidersHorizontal size={16} color="#60A5FA" weight="duotone" className="mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-[12px] font-semibold text-slate-700 mb-0.5">How filters work</p>
               <p className="text-[11px] text-slate-400 leading-relaxed">
@@ -220,14 +220,14 @@ export default function FiltersDrawer({ open, onClose, filters, onChange }: Prop
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-t border-line flex-shrink-0">
         <button onClick={handleClear}
-          className="text-[13px] font-semibold text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-[#EFF6FF] transition-colors">
+          className="text-[13px] font-semibold text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-surface transition-colors">
           Clear All
         </button>
         <Button variant="contained" size="small" startIcon={<FunnelSimple size={14} weight="duotone" />}
           onClick={handleApply}
-          sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.78rem", px: 2.5, py: 0.9, boxShadow: "0 2px 12px #1D4ED833", "&:hover": { bgcolor: "#60A5FA", boxShadow: "0 2px 14px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" } }}>
+          sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.78rem", px: 2.5, py: 0.9, boxShadow: "0 2px 12px #1D4ED833", "&:hover": { bgcolor: "#1E40AF", boxShadow: "0 2px 14px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" } }}>
           Apply{activeCount > 0 ? ` (${activeCount})` : ""}
         </Button>
       </div>

@@ -50,20 +50,20 @@ const kpis = [
 
 /* ─────────── Quick-stat pills for the banner ─────────── */
 const quickStats = [
-  { label: "Tasks due today",      value: "7",   icon: ClipboardText,  color: "bg-white/15 text-white"          },
-  { label: "Deals to follow up",  value: "3",   icon: Handshake,      color: "bg-white/15 text-white"          },
-  { label: "Meetings today",      value: "2",   icon: CalendarBlank,  color: "bg-white/15 text-white"          },
+  { label: "Tasks due today",      value: "7",   icon: ClipboardText,  color: "bg-card/15 text-white"          },
+  { label: "Deals to follow up",  value: "3",   icon: Handshake,      color: "bg-card/15 text-white"          },
+  { label: "Meetings today",      value: "2",   icon: CalendarBlank,  color: "bg-card/15 text-white"          },
   { label: "New leads this week", value: "+84", icon: TrendUp,        color: "bg-[#3B82F6]/30 text-[#EFF6FF]" },
 ];
 
 export default function DashboardPage() {
   return (
-    <div className="flex h-screen bg-[#EFF6FF] font-sans">
+    <div className="flex h-screen bg-surface font-sans">
       {/* ── Sidebar ── */}
       <Sidebar />
 
       {/* ── Main area ── */}
-      <div className="ml-[230px] flex-1 flex flex-col min-h-screen overflow-auto">
+      <div className="ml-[230px] flex-1 flex flex-col min-h-screen overflow-auto bg-canvas">
         <TopBar title="Dashboard" />
 
         <main className="flex-1 px-6 py-5 space-y-5 animate-fade-in">
@@ -72,10 +72,10 @@ export default function DashboardPage() {
           ═══════════════════════════════════════ */}
           <div className="relative bg-[#0C2472] rounded-2xl overflow-hidden">
             {/* Decorative blobs */}
-            <div className="absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/5 pointer-events-none" />
-            <div className="absolute right-16 top-6 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
-            <div className="absolute right-48 -bottom-8 w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
-            <div className="absolute left-1/2 -bottom-4 w-20 h-20 rounded-full bg-white/5 pointer-events-none" />
+            <div className="absolute -right-10 -top-10 w-52 h-52 rounded-full bg-card/5 pointer-events-none" />
+            <div className="absolute right-16 top-6 w-28 h-28 rounded-full bg-card/5 pointer-events-none" />
+            <div className="absolute right-48 -bottom-8 w-36 h-36 rounded-full bg-card/5 pointer-events-none" />
+            <div className="absolute left-1/2 -bottom-4 w-20 h-20 rounded-full bg-card/5 pointer-events-none" />
 
             <div className="relative z-10 px-6 pt-5 pb-4">
               <p className="text-[#93C5FD] text-[12px] font-semibold tracking-wide mb-0.5">

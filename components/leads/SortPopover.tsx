@@ -29,8 +29,8 @@ const SORT_COLUMNS = [
 ];
 
 const SELECT_SX = {
-  fontSize: "0.78rem", bgcolor: "#EFF6FF", borderRadius: "8px",
-  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#E3ECFC", borderWidth: 1.5 },
+  fontSize: "0.78rem", bgcolor: "var(--surface)", borderRadius: "8px",
+  "& .MuiOutlinedInput-notchedOutline": { borderColor: "var(--line)", borderWidth: 1.5 },
   "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#60A5FA" },
   "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#1D4ED8", borderWidth: 2 },
   "&.Mui-focused": { boxShadow: "0 0 0 2px #93C5FD" },
@@ -65,12 +65,12 @@ export default function SortPopover({ anchor, onClose, sorts, onChange }: Props)
       open={Boolean(anchor)} anchorEl={anchor} onClose={onClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
-      PaperProps={{ sx: { borderRadius: "14px", border: "1.5px solid #E3ECFC", boxShadow: "0 8px 32px rgba(12,36,114,0.14)", mt: 0.5, overflow: "hidden" } }}
+      PaperProps={{ sx: { borderRadius: "14px", border: "1px solid var(--line)", boxShadow: "0 8px 32px rgba(12,36,114,0.14)", mt: 0.5, overflow: "hidden" } }}
     >
       <div className="w-[380px]">
         {/* Popover header */}
-        <div className="flex items-center gap-2.5 px-4 py-3 bg-[#EFF6FF] border-b border-[#E3ECFC]">
-          <SortAscending size={16} color="#1D4ED8" weight="duotone" />
+        <div className="flex items-center gap-2.5 px-4 py-3 bg-surface border-b border-line">
+          <SortAscending size={16} color="var(--link)" weight="duotone" />
           <p className="font-heading text-[12.5px] font-bold text-slate-800">Sort Records</p>
           <span className="ml-auto text-[11px] text-slate-400">{local.length} sort{local.length !== 1 ? "s" : ""}</span>
         </div>
@@ -80,7 +80,7 @@ export default function SortPopover({ anchor, onClose, sorts, onChange }: Props)
           {local.map((row, idx) => (
             <div key={row.id} className="flex items-center gap-2">
               {/* Priority label */}
-              <span className="font-heading text-[10px] font-bold text-slate-400 uppercase tracking-wider w-10 flex-shrink-0">
+              <span className="font-heading text-[11px] font-bold text-slate-400 uppercase tracking-wider w-10 flex-shrink-0">
                 {idx === 0 ? "By" : "Then"}
               </span>
 
@@ -94,7 +94,7 @@ export default function SortPopover({ anchor, onClose, sorts, onChange }: Props)
               </FormControl>
 
               {/* Direction toggle */}
-              <div className="flex items-center bg-[#EFF6FF] rounded-lg border border-[#E3ECFC] p-0.5 gap-0.5">
+              <div className="flex items-center bg-surface rounded-lg border border-line p-0.5 gap-0.5">
                 {(["asc", "desc"] as const).map(dir => (
                   <Tooltip key={dir} title={dir === "asc" ? "Ascending A→Z / 0→9" : "Descending Z→A / 9→0"}>
                     <button
@@ -115,7 +115,7 @@ export default function SortPopover({ anchor, onClose, sorts, onChange }: Props)
               {/* Remove */}
               {local.length > 1 && (
                 <IconButton size="small" onClick={() => remove(row.id)}
-                  sx={{ borderRadius: "6px", p: 0.5, "&:hover": { bgcolor: "#FEF2F2" } }}>
+                  sx={{ borderRadius: "6px", p: 0.5, "&:hover": { bgcolor: "var(--st-red-bg)" } }}>
                   <Trash size={13} color="#EF4444" weight="duotone" />
                 </IconButton>
               )}
@@ -125,7 +125,7 @@ export default function SortPopover({ anchor, onClose, sorts, onChange }: Props)
           {/* Add sort */}
           {local.length < 3 && (
             <button onClick={add}
-              className="flex items-center gap-1.5 text-[12px] font-semibold text-[#1D4ED8] hover:text-[#0C2472] py-1.5 px-2 rounded-lg hover:bg-[#EFF6FF] transition-colors w-full">
+              className="flex items-center gap-1.5 text-[12px] font-semibold text-link hover:text-ink py-1.5 px-2 rounded-lg hover:bg-surface transition-colors w-full">
               <Plus size={12} weight="duotone" />
               Add sort
             </button>
@@ -133,13 +133,13 @@ export default function SortPopover({ anchor, onClose, sorts, onChange }: Props)
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-3 border-t border-[#EFF6FF] bg-white">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-line-soft bg-card">
           <button onClick={handleClear}
             className="text-[12px] font-semibold text-slate-400 hover:text-slate-600 px-2 py-1 rounded-lg hover:bg-slate-50 transition-colors">
             Clear
           </button>
           <Button variant="contained" size="small" onClick={handleApply}
-            sx={{ bgcolor: "#1D4ED8", borderRadius: "8px", textTransform: "none", fontWeight: 700, fontSize: "0.75rem", px: 2, "&:hover": { bgcolor: "#60A5FA" }, "&:active": { bgcolor: "#0C2472" } }}>
+            sx={{ bgcolor: "#1D4ED8", borderRadius: "8px", textTransform: "none", fontWeight: 700, fontSize: "0.75rem", px: 2, "&:hover": { bgcolor: "#1E40AF" }, "&:active": { bgcolor: "#0C2472" } }}>
             Apply Sort
           </Button>
         </div>

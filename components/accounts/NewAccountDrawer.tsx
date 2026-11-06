@@ -21,16 +21,16 @@ const STATES     = ["Andhra Pradesh", "Delhi", "Gujarat", "Karnataka", "Kerala",
 
 const FX = {
   "& .MuiOutlinedInput-root": {
-    borderRadius: "10px", backgroundColor: "#EFF6FF", fontSize: "0.82rem",
-    "& fieldset":            { borderColor: "#E3ECFC", borderWidth: 1.5 },
+    borderRadius: "10px", backgroundColor: "var(--surface)", fontSize: "0.82rem",
+    "& fieldset":            { borderColor: "var(--line)", borderWidth: 1.5 },
     "&:hover fieldset":      { borderColor: "#60A5FA" },
     "&.Mui-focused fieldset":{ borderColor: "#1D4ED8", borderWidth: 2 },
     "&.Mui-focused":         { boxShadow: "0 0 0 2px #93C5FD" },
     "& input":               { padding: "9px 12px" },
   },
-  "& .MuiInputLabel-root":             { fontSize: "0.78rem", color: "#6B7280" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#1D4ED8" },
-  "& .MuiSelect-select":               { fontSize: "0.82rem", padding: "9px 12px", backgroundColor: "#EFF6FF" },
+  "& .MuiInputLabel-root":             { fontSize: "0.78rem", color: "var(--fg-3)" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "var(--link)" },
+  "& .MuiSelect-select":               { fontSize: "0.82rem", padding: "9px 12px", backgroundColor: "var(--surface)" },
 };
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -51,7 +51,7 @@ function AddressBlock({ title, prefix, form, set }: { title: string; prefix: str
   const k = (f: string) => prefix + f;
   const clearAll = () => ["Country","Building","Street","City","State","Zip","Lat","Lng"].forEach(f => set(k(f.toLowerCase()), ""));
   return (
-    <div className="flex-1 min-w-0 bg-[#EFF6FF]/60 rounded-xl border border-[#E3ECFC] p-4 space-y-2.5">
+    <div className="flex-1 min-w-0 bg-surface/60 rounded-xl border border-line p-4 space-y-2.5">
       <p className="font-heading text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3">{title}</p>
       <FormControl size="small" fullWidth sx={FX}>
         <InputLabel>Country / Region</InputLabel>
@@ -76,7 +76,7 @@ function AddressBlock({ title, prefix, form, set }: { title: string; prefix: str
         <TextField label="Longitude" value={form[k("lng")] || ""} onChange={e => set(k("lng"), e.target.value)} size="small" fullWidth sx={FX} />
       </div>
       <div className="flex justify-end pt-0.5">
-        <button onClick={clearAll} className="text-[11.5px] font-semibold text-[#1D4ED8] hover:text-[#0C2472] hover:underline transition-colors">Clear All</button>
+        <button onClick={clearAll} className="text-[11.5px] font-semibold text-link hover:text-ink hover:underline transition-colors">Clear All</button>
       </div>
     </div>
   );
@@ -90,10 +90,10 @@ export default function NewAccountDrawer({ open, onClose, mode = "create", initi
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}
-      PaperProps={{ sx: { width: { xs: "100%", sm: 700 }, display: "flex", flexDirection: "column", bgcolor: "#F8FAFF", boxShadow: "-12px 0 48px rgba(12,36,114,0.12)" } }}>
+      PaperProps={{ sx: { width: { xs: "100%", sm: 700 }, display: "flex", flexDirection: "column", bgcolor: "var(--surface-subtle)", boxShadow: "-12px 0 48px rgba(12,36,114,0.12)" } }}>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-b border-line flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-[#1D4ED8] flex items-center justify-center shadow-sm">
             <Buildings size={18} color="#fff" weight="duotone" />
@@ -104,8 +104,8 @@ export default function NewAccountDrawer({ open, onClose, mode = "create", initi
         </div>
         <Tooltip title="Close">
           <IconButton size="small" onClick={onClose}
-            sx={{ borderRadius: "9px", border: "1.5px solid #E3ECFC", "&:hover": { bgcolor: "#EFF6FF" } }}>
-            <X size={17} color="#64748B" weight="duotone" />
+            sx={{ borderRadius: "9px", border: "1px solid var(--line)", "&:hover": { bgcolor: "var(--surface)" } }}>
+            <X size={17} color="var(--fg-3)" weight="duotone" />
           </IconButton>
         </Tooltip>
       </div>
@@ -163,7 +163,7 @@ export default function NewAccountDrawer({ open, onClose, mode = "create", initi
           </div>
         </div>
 
-        <Divider sx={{ borderColor: "#E3ECFC" }} />
+        <Divider sx={{ borderColor: "var(--line)" }} />
 
         {/* Description */}
         <div>
@@ -173,7 +173,7 @@ export default function NewAccountDrawer({ open, onClose, mode = "create", initi
             sx={{ ...FX, "& .MuiOutlinedInput-root": { ...FX["& .MuiOutlinedInput-root"], "& textarea": { padding: "9px 12px" } } }} />
         </div>
 
-        <Divider sx={{ borderColor: "#E3ECFC" }} />
+        <Divider sx={{ borderColor: "var(--line)" }} />
 
         {/* Address Information */}
         <div>
@@ -188,16 +188,16 @@ export default function NewAccountDrawer({ open, onClose, mode = "create", initi
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-end gap-3 px-6 py-4 bg-white border-t border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-end gap-3 px-6 py-4 bg-card border-t border-line flex-shrink-0">
         <Button variant="outlined" size="small" onClick={onClose}
-          sx={{ borderColor: "#E3ECFC", color: "#475569", borderRadius: "9px", textTransform: "none", fontWeight: 600, fontSize: "0.8rem", px: 3, py: 0.9, "&:hover": { borderColor: "#60A5FA", color: "#1D4ED8", bgcolor: "#EFF6FF" } }}>
+          sx={{ borderColor: "var(--line)", color: "var(--fg-2)", borderRadius: "9px", textTransform: "none", fontWeight: 600, fontSize: "0.8rem", px: 3, py: 0.9, "&:hover": { borderColor: "#60A5FA", color: "var(--link)", bgcolor: "var(--surface)" } }}>
           Cancel
         </Button>
         <Button variant="contained" size="small"
           startIcon={<FloppyDisk size={15} weight="duotone" />}
           onClick={handleSubmit}
           disabled={!form.accountName}
-          sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.8rem", px: 3, py: 0.9, boxShadow: "0 2px 12px #1D4ED833", "&:hover": { bgcolor: "#60A5FA", boxShadow: "0 4px 18px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" }, "&.Mui-disabled": { bgcolor: "#E3ECFC", color: "#9CA3AF" } }}>
+          sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.8rem", px: 3, py: 0.9, boxShadow: "0 2px 12px #1D4ED833", "&:hover": { bgcolor: "#1E40AF", boxShadow: "0 4px 18px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" }, "&.Mui-disabled": { bgcolor: "var(--tint)", color: "var(--fg-3)" } }}>
           {isEdit ? "Update Account" : "Save Account"}
         </Button>
       </div>

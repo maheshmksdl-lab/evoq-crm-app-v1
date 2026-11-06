@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Dark mode follows the operating-system setting (prefers-color-scheme).
+   `dark:` utilities and every token below switch together, so all screens stay consistent. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
 
 /* ── Brand palette (kept from the previous Tailwind config / MUI theme) ── */
 @theme {
@@ -24,48 +26,125 @@
   }
 }
 
-/* ── shadcn/ui tokens, mapped onto the CRM brand colours ── */
+/* ══════════════════════════════════════════════════════════════
+   THEME TOKENS
+   Components use these (as Tailwind classes like bg-card / text-ink, or as
+   var(--…) in MUI sx props) instead of raw hex, so light and dark stay in sync.
+
+   --page          app background behind everything
+   --card          cards, tables, drawers, menus (was bg-white)
+   --surface       soft brand surface: inputs, chips, hover fills (was #EFF6FF)
+   --surface-subtle  barely-there fill: table headers, footers
+   --tint          stronger brand fill: badges, selected chips (was #E3ECFC)
+   --line          borders (was #E3ECFC)
+   --line-soft     row dividers / inner borders (was #EFF6FF)
+   --ink           brand navy text — headings, chip text (was #0C2472)
+   --link          interactive blue text — links, active tabs (was #1D4ED8)
+   --fg / --fg-2   body text / secondary text
+   --fg-3          muted text (placeholders, meta) — still AA on cards
+   ══════════════════════════════════════════════════════════════ */
 :root {
-  --radius: 0.625rem;
-  --background: #f1f5f9;
-  --foreground: #0f172a;
+  color-scheme: light dark; /* native controls + tells browsers not to auto-darken the page */
+
+  --page: #eff6ff;
   --card: #ffffff;
+  --surface: #eff6ff;
+  --surface-subtle: #f7faff;
+  --tint: #e3ecfc;
+  --line: #e3ecfc;
+  --line-soft: #eef2fa;
+  --line-strong: #cfdcf3;
+  --ink: #0c2472;
+  --link: #1d4ed8;
+  --link-hover: #0c2472;
+  --fg: #1e293b;
+  --fg-2: #475569;
+  --fg-3: #64748b;
+  --shadow-card: 0 1px 3px rgb(12 36 114 / 0.06), 0 8px 24px -12px rgb(12 36 114 / 0.12);
+
+  /* Status pills (success / danger / warning): pastel fill + dark text in light,
+     deep fill + bright text in dark */
+  --st-green-bg: #dcfce7;  --st-green-fg: #166534;
+  --st-red-bg: #fef2f2;    --st-red-fg: #991b1b;
+  --st-amber-bg: #fef3c7;  --st-amber-fg: #92400e;
+  --st-amber-subtle: #fffbeb;
+
+  /* shadcn/ui tokens, mapped onto the CRM brand colours */
+  --radius: 0.625rem;
+  --background: var(--page);
+  --foreground: #0f172a;
   --card-foreground: #0f172a;
-  --popover: #ffffff;
+  --popover: var(--card);
   --popover-foreground: #0f172a;
   --primary: #1d4ed8;
   --primary-foreground: #ffffff;
   --secondary: #0c2472;
   --secondary-foreground: #ffffff;
-  --muted: #e3ecfc;
-  --muted-foreground: #64748b;
-  --accent: #eff6ff;
-  --accent-foreground: #0c2472;
+  --muted: var(--tint);
+  --muted-foreground: var(--fg-3);
+  --accent: var(--surface);
+  --accent-foreground: var(--ink);
   --destructive: #ef4444;
-  --border: #e3ecfc;
-  --input: #e3ecfc;
+  --border: var(--line);
+  --input: var(--line);
   --ring: #93c5fd;
 }
 
-.dark {
-  --background: #0b1220;
-  --foreground: #f1f5f9;
-  --card: #111a2e;
-  --card-foreground: #f1f5f9;
-  --popover: #111a2e;
-  --popover-foreground: #f1f5f9;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --secondary: #1e3a8a;
-  --secondary-foreground: #ffffff;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #1e293b;
-  --accent-foreground: #f1f5f9;
-  --destructive: #f87171;
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #60a5fa;
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Navy-based dark palette, continuous with the sidebar (#0C2472) */
+    --page: #08122a;
+    --card: #0f1a33;
+    --surface: #15233f;
+    --surface-subtle: #121f3a;
+    --tint: #1c2d50;
+    --line: #22355c;
+    --line-soft: #1a2a4a;
+    --line-strong: #2f4673;
+    --ink: #dce6fa;
+    --link: #8ab4ff;
+    --link-hover: #bcd4ff;
+    --fg: #e2e8f0;
+    --fg-2: #b4c0d3;
+    --fg-3: #8d9bb3;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+
+    --st-green-bg: #0f3b2e;  --st-green-fg: #6ee7b7;
+    --st-red-bg: #3d1622;    --st-red-fg: #fca5a5;
+    --st-amber-bg: #3b2a0b;  --st-amber-fg: #fcd34d;
+    --st-amber-subtle: #2c2010;
+
+    --foreground: #e2e8f0;
+    --card-foreground: #e2e8f0;
+    --popover-foreground: #e2e8f0;
+    --primary: #3b82f6;
+    --destructive: #f87171;
+    --ring: #60a5fa;
+
+    /* Remap the Tailwind neutrals used across the app (text-slate-*, bg-slate-*)
+       so existing classes read correctly on navy without per-element dark: overrides.
+       Text shades get lighter, background shades get darker. */
+    --color-slate-50: #121f3a;
+    --color-slate-100: #1a2a4a;
+    --color-slate-200: #3a4c70;
+    --color-slate-300: #61718f;
+    --color-slate-400: #8d9bb3;
+    --color-slate-500: #a3b0c5;
+    --color-slate-600: #b4c0d3;
+    --color-slate-700: #cbd5e1;
+    --color-slate-800: #e2e8f0;
+    --color-slate-900: #f1f5f9;
+
+    /* Status tints: pastel fills become deep translucent fills, text gets brighter */
+    --color-emerald-50: #0e2e2c;
+    --color-emerald-100: #12403a;
+    --color-emerald-600: #34d399;
+    --color-emerald-700: #6ee7b7;
+    --color-red-50: #3a1622;
+    --color-red-100: #4a1b2a;
+    --color-red-500: #f87171;
+    --color-red-600: #fca5a5;
+  }
 }
 
 @theme inline {
@@ -87,6 +166,22 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* CRM theme tokens as Tailwind colours: bg-surface, border-line, text-ink, text-link … */
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-tint: var(--tint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -106,8 +201,8 @@
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--page);
+    color: var(--fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -118,11 +213,35 @@
   }
 }
 
+/* ── App canvas: the content area to the right of the sidebar ──
+   Soft diagonal wash through the brand surface blues (#F8FAFF → brand-50 → brand-100),
+   with faint brand-500 / brand-700 glows in opposite corners. */
+@utility bg-canvas {
+  background-color: var(--color-brand-50);
+  background-image:
+    radial-gradient(1100px 600px at 100% 0%, rgb(59 130 246 / 0.18), transparent 65%),
+    radial-gradient(1000px 560px at 0% 100%, rgb(29 78 216 / 0.11), transparent 65%),
+    linear-gradient(160deg, #f8faff 0%, var(--color-brand-50) 40%, var(--color-brand-100) 100%);
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--page);
+    background-image:
+      radial-gradient(1100px 600px at 100% 0%, rgb(59 130 246 / 0.16), transparent 65%),
+      radial-gradient(1000px 560px at 0% 100%, rgb(29 78 216 / 0.14), transparent 65%),
+      linear-gradient(160deg, #0b1733 0%, #08122a 45%, #0a1838 100%);
+  }
+}
+
+/* Shared card elevation (light: soft navy shadow; dark: deeper, neutral) */
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
 /* ── Slim scrollbar ── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-3); }
 
 /* ── Recharts ── */
 .recharts-tooltip-wrapper { outline: none !important; }

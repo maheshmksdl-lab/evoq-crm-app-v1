@@ -56,17 +56,17 @@ const CONTACTS = [
 const FX = {
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px",
-    backgroundColor: "#EFF6FF",             // Surface
+    backgroundColor: "var(--surface)",             // Surface
     fontSize: "0.82rem",
-    "& fieldset":           { borderColor: "#E3ECFC", borderWidth: 1.5 },
+    "& fieldset":           { borderColor: "var(--line)", borderWidth: 1.5 },
     "&:hover fieldset":     { borderColor: "#60A5FA" },
     "&.Mui-focused fieldset":{ borderColor: "#1D4ED8", borderWidth: 2 },
     "&.Mui-focused":        { boxShadow: "0 0 0 2px #93C5FD" },
     "& input":              { padding: "10px 14px" },
   },
-  "& .MuiInputLabel-root":            { fontSize: "0.79rem", color: "#6B7280" },
-  "& .MuiInputLabel-root.Mui-focused":{ color: "#1D4ED8" },
-  "& .MuiSelect-select":              { fontSize: "0.82rem", padding: "10px 14px", backgroundColor: "#EFF6FF" },
+  "& .MuiInputLabel-root":            { fontSize: "0.79rem", color: "var(--fg-3)" },
+  "& .MuiInputLabel-root.Mui-focused":{ color: "var(--link)" },
+  "& .MuiSelect-select":              { fontSize: "0.82rem", padding: "10px 14px", backgroundColor: "var(--surface)" },
 };
 
 // ─────────────────────────────────────────────
@@ -134,13 +134,13 @@ export default function NewDealDrawer({ open, onClose, mode = "create", initialD
           width: { xs: "100%", sm: 680 },
           display: "flex",
           flexDirection: "column",
-          bgcolor: "#F8FAFF",
+          bgcolor: "var(--surface-subtle)",
           boxShadow: "-12px 0 48px rgba(12,36,114,0.12)",
         },
       }}
     >
       {/* ══ Header ══ */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-b border-line flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-[#1D4ED8] flex items-center justify-center shadow-sm">
             <Handshake size={18} color="#fff" weight="duotone" />
@@ -151,8 +151,8 @@ export default function NewDealDrawer({ open, onClose, mode = "create", initialD
         </div>
         <Tooltip title="Close">
           <IconButton size="small" onClick={onClose}
-            sx={{ borderRadius: "9px", border: "1.5px solid #E3ECFC", "&:hover": { bgcolor: "#EFF6FF" } }}>
-            <X size={17} color="#64748B" weight="duotone" />
+            sx={{ borderRadius: "9px", border: "1px solid var(--line)", "&:hover": { bgcolor: "var(--surface)" } }}>
+            <X size={17} color="var(--fg-3)" weight="duotone" />
           </IconButton>
         </Tooltip>
       </div>
@@ -314,21 +314,21 @@ export default function NewDealDrawer({ open, onClose, mode = "create", initialD
       </div>
 
       {/* ══ Footer ══ */}
-      <div className="flex items-center justify-end gap-3 px-6 py-4 bg-white border-t border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-end gap-3 px-6 py-4 bg-card border-t border-line flex-shrink-0">
         <Button
           variant="outlined"
           size="small"
           onClick={onClose}
           sx={{
-            borderColor: "#E3ECFC",
-            color: "#475569",
+            borderColor: "var(--line)",
+            color: "var(--fg-2)",
             borderRadius: "9px",
             textTransform: "none",
             fontWeight: 600,
             fontSize: "0.8rem",
             px: 3,
             py: 0.9,
-            "&:hover": { borderColor: "#60A5FA", color: "#1D4ED8", bgcolor: "#EFF6FF" },
+            "&:hover": { borderColor: "#60A5FA", color: "var(--link)", bgcolor: "var(--surface)" },
           }}
         >
           Cancel
@@ -346,7 +346,7 @@ export default function NewDealDrawer({ open, onClose, mode = "create", initialD
             px: 3,
             py: 0.9,
             boxShadow: "0 2px 12px #1D4ED833",
-            "&:hover":  { bgcolor: "#60A5FA", boxShadow: "0 4px 18px #60A5FA55" },
+            "&:hover":  { bgcolor: "#1E40AF", boxShadow: "0 4px 18px #60A5FA55" },
             "&:active": { bgcolor: "#0C2472" },
           }}
         >

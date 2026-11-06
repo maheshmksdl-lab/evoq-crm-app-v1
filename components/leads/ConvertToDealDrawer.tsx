@@ -50,23 +50,23 @@ const DEAL_STAGES = [
 const FX = {
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px",
-    backgroundColor: "#EFF6FF",           // Surface
+    backgroundColor: "var(--surface)",           // Surface
     fontSize: "0.82rem",
-    "& fieldset": { borderColor: "#E3ECFC", borderWidth: 1.5 },
+    "& fieldset": { borderColor: "var(--line)", borderWidth: 1.5 },
     "&:hover fieldset": { borderColor: "#60A5FA" },
     "&.Mui-focused fieldset": { borderColor: "#1D4ED8", borderWidth: 2 },
     "&.Mui-focused": { boxShadow: "0 0 0 2px #93C5FD" },
     "& input": { padding: "10px 14px" },
   },
-  "& .MuiInputLabel-root":          { fontSize: "0.79rem", color: "#6B7280" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#1D4ED8" },
-  "& .MuiSelect-select":            { fontSize: "0.82rem", padding: "10px 14px", backgroundColor: "#EFF6FF" },
+  "& .MuiInputLabel-root":          { fontSize: "0.79rem", color: "var(--fg-3)" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "var(--link)" },
+  "& .MuiSelect-select":            { fontSize: "0.82rem", padding: "10px 14px", backgroundColor: "var(--surface)" },
 };
 
 const CHECKBOX_SX = {
   p: 0.5,
   color: "#CBD5E1",
-  "&.Mui-checked": { color: "#1D4ED8" },
+  "&.Mui-checked": { color: "var(--link)" },
   flexShrink: 0,
 };
 
@@ -84,8 +84,8 @@ function SectionToggle({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm overflow-hidden">
-      <label className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-[#EFF6FF]/60 transition-colors select-none">
+    <div className="bg-card rounded-2xl border border-line shadow-sm overflow-hidden">
+      <label className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-surface/60 transition-colors select-none">
         <Checkbox
           checked={checked}
           onChange={e => onToggle(e.target.checked)}
@@ -104,7 +104,7 @@ function SectionToggle({
       </label>
 
       {checked && children && (
-        <div className="px-4 pb-4 pt-2 border-t border-[#EFF6FF]">
+        <div className="px-4 pb-4 pt-2 border-t border-line-soft">
           {children}
         </div>
       )}
@@ -167,16 +167,16 @@ export default function ConvertToDealDrawer({
           width: { xs: "100%", sm: 520 },
           display: "flex",
           flexDirection: "column",
-          bgcolor: "#F8FAFF",
+          bgcolor: "var(--surface-subtle)",
           boxShadow: "-12px 0 48px rgba(12,36,114,0.12)",
         },
       }}
     >
       {/* ══ Header ══ */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-b border-line flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] flex items-center justify-center">
-            <ArrowsLeftRight size={18} color="#1D4ED8" weight="duotone" />
+          <div className="w-9 h-9 rounded-xl bg-surface flex items-center justify-center">
+            <ArrowsLeftRight size={18} color="var(--link)" weight="duotone" />
           </div>
           <div>
             <h2 className="font-heading text-[15px] font-bold text-slate-900 tracking-tight">
@@ -191,9 +191,9 @@ export default function ConvertToDealDrawer({
           <IconButton
             size="small"
             onClick={handleClose}
-            sx={{ borderRadius: "9px", border: "1.5px solid #E3ECFC", "&:hover": { bgcolor: "#EFF6FF" } }}
+            sx={{ borderRadius: "9px", border: "1px solid var(--line)", "&:hover": { bgcolor: "var(--surface)" } }}
           >
-            <X size={17} color="#64748B" weight="duotone" />
+            <X size={17} color="var(--fg-3)" weight="duotone" />
           </IconButton>
         </Tooltip>
       </div>
@@ -204,10 +204,10 @@ export default function ConvertToDealDrawer({
         {!converted ? (
           <>
             {/* ── Create New Account (always created, no checkbox) ── */}
-            <div className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm overflow-hidden">
-              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-[#EFF6FF]">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#EFF6FF]">
-                  <Buildings size={15} color="#1D4ED8" weight="duotone" />
+            <div className="bg-card rounded-2xl border border-line shadow-sm overflow-hidden">
+              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-line-soft">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface">
+                  <Buildings size={15} color="var(--link)" weight="duotone" />
                 </div>
                 <span className="font-heading text-[13px] font-bold text-slate-800">Create New Account</span>
               </div>
@@ -224,10 +224,10 @@ export default function ConvertToDealDrawer({
             </div>
 
             {/* ── Create New Contact (always created, no checkbox) ── */}
-            <div className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm overflow-hidden">
-              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-[#EFF6FF]">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#EFF6FF]">
-                  <User size={15} color="#1D4ED8" weight="duotone" />
+            <div className="bg-card rounded-2xl border border-line shadow-sm overflow-hidden">
+              <div className="flex items-center gap-2.5 px-4 py-3 border-b border-line-soft">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-surface">
+                  <User size={15} color="var(--link)" weight="duotone" />
                 </div>
                 <span className="font-heading text-[13px] font-bold text-slate-800">Create New Contact</span>
               </div>
@@ -308,8 +308,8 @@ export default function ConvertToDealDrawer({
             </SectionToggle>
 
             {/* ── Owner of the New Records ── */}
-            <div className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm p-4">
-              <p className="font-heading text-[10.5px] font-bold text-[#0C2472] uppercase tracking-widest mb-3">
+            <div className="bg-card rounded-2xl border border-line shadow-sm p-4">
+              <p className="font-heading text-[10.5px] font-bold text-ink uppercase tracking-widest mb-3">
                 Owner of the New Records
               </p>
               <div className="flex items-center gap-3">
@@ -330,8 +330,8 @@ export default function ConvertToDealDrawer({
             </div>
 
             {/* ── Notify record owner ── */}
-            <div className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm overflow-hidden">
-              <label className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-[#EFF6FF]/60 transition-colors select-none">
+            <div className="bg-card rounded-2xl border border-line shadow-sm overflow-hidden">
+              <label className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-surface/60 transition-colors select-none">
                 <Checkbox
                   checked={notifyOwner}
                   onChange={e => setNotifyOwner(e.target.checked)}
@@ -359,10 +359,10 @@ export default function ConvertToDealDrawer({
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
               {/* Account and Contact are always created */}
-              <span className="text-[11px] bg-[#EFF6FF] text-[#1D4ED8] font-semibold px-3 py-1 rounded-full border border-[#E3ECFC]">
+              <span className="text-[11px] bg-surface text-link font-semibold px-3 py-1 rounded-full border border-line">
                 ✓ Account created
               </span>
-              <span className="text-[11px] bg-[#EFF6FF] text-[#1D4ED8] font-semibold px-3 py-1 rounded-full border border-[#E3ECFC]">
+              <span className="text-[11px] bg-surface text-link font-semibold px-3 py-1 rounded-full border border-line">
                 ✓ Contact created
               </span>
               {createDeal && (
@@ -383,7 +383,7 @@ export default function ConvertToDealDrawer({
                 fontWeight: 700,
                 fontSize: "0.78rem",
                 px: 4,
-                "&:hover":  { bgcolor: "#60A5FA" },
+                "&:hover":  { bgcolor: "#1E40AF" },
                 "&:active": { bgcolor: "#0C2472" },
               }}
             >
@@ -395,20 +395,20 @@ export default function ConvertToDealDrawer({
 
       {/* ══ Footer ══ */}
       {!converted && (
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-[#E3ECFC] flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 bg-card border-t border-line flex-shrink-0">
           <Button
             variant="outlined"
             size="small"
             onClick={handleClose}
             sx={{
-              borderColor: "#E3ECFC",
-              color: "#475569",
+              borderColor: "var(--line)",
+              color: "var(--fg-2)",
               borderRadius: "9px",
               textTransform: "none",
               fontWeight: 600,
               fontSize: "0.78rem",
               px: 2.5,
-              "&:hover": { borderColor: "#60A5FA", color: "#1D4ED8", bgcolor: "#EFF6FF" },
+              "&:hover": { borderColor: "#60A5FA", color: "var(--link)", bgcolor: "var(--surface)" },
             }}
           >
             Cancel
@@ -420,7 +420,9 @@ export default function ConvertToDealDrawer({
             onClick={handleConvert}
             disabled={!canConvert}
             sx={{
+              // Solid green CTA with white text: fixed shades (not theme tokens) so it reads in both modes
               bgcolor: "#059669",
+              color: "#FFFFFF",
               borderRadius: "9px",
               textTransform: "none",
               fontWeight: 700,
@@ -430,7 +432,7 @@ export default function ConvertToDealDrawer({
               boxShadow: "0 2px 12px rgba(5,150,105,0.25)",
               "&:hover":  { bgcolor: "#047857", boxShadow: "0 4px 16px rgba(5,150,105,0.35)" },
               "&:active": { bgcolor: "#065F46" },
-              "&.Mui-disabled": { bgcolor: "#E3ECFC", color: "#9CA3AF", boxShadow: "none" },
+              "&.Mui-disabled": { bgcolor: "var(--tint)", color: "var(--fg-3)", boxShadow: "none" },
             }}
           >
             Convert

@@ -6,10 +6,12 @@ import TopBar from "@/components/layout/TopBar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Link from "next/link";
 import {
-  ArrowLeft, FunnelSimple, PencilSimple, CaretDown,
-  ChartBar, ArrowsClockwise, Info, CaretRight,
+  ArrowLeft, FunnelSimple, PencilSimple, CaretDown, CaretRight, House,
+  ChartBar, ArrowsClockwise, Info, Table,
 } from "@phosphor-icons/react";
+import { Pagination } from "@/components/list/ListParts";
 
 // ─────────────────────────────────────────────
 //  Sample report data
@@ -42,6 +44,9 @@ const REPORT_DATA: Record<number, {
 
 const DEFAULT_REPORT = { name: "Report", updatedAt: "Updated recently", columns: ["NAME"], rows: [] };
 
+// Numeric-looking cells (₹ amounts, %, counts) are right-aligned so figures line up.
+const isNumeric = (v: string) => /^[₹$]?[\d,.]+%?$/.test(v.trim());
+
 export default function ReportDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router  = useRouter();
@@ -50,125 +55,130 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
 
   const [showDetails, setShowDetails] = useState(false);
 
+  const numericCol = report.columns.map((_, j) => report.rows.length > 0 && report.rows.every(r => isNumeric(r[j] ?? "")));
+  const template   = report.columns.map((_, j) => numericCol[j] ? "minmax(120px,0.8fr)" : "minmax(160px,1.2fr)").join(" ");
+
+  const iconBtn = { width: 34, height: 34, borderRadius: "10px", border: "1px solid var(--line)", bgcolor: "var(--card)", "&:hover": { bgcolor: "var(--surface)", borderColor: "var(--link)" } } as const;
+
   return (
-    <div className="flex h-screen bg-[#EFF6FF] font-sans">
+    <div className="flex h-screen bg-page font-sans">
       <Sidebar />
 
-      <div className="ml-[230px] flex-1 flex flex-col min-h-screen overflow-auto">
+      <div className="ml-[230px] flex-1 flex flex-col min-h-screen overflow-auto bg-canvas">
         <TopBar />
 
-        <main className="flex-1 flex flex-col animate-fade-in">
+        <main className="flex-1 px-6 py-5 space-y-4 animate-fade-in">
 
-          {/* ══ Report header ══ */}
-          <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC]">
-            <div className="flex items-center gap-3">
+          {/* ══ Breadcrumb ══ */}
+          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12px] text-fg-3">
+            <Link href="/" aria-label="Dashboard" className="hover:text-link transition-colors"><House size={13} weight="duotone" /></Link>
+            <CaretRight size={11} weight="bold" className="text-slate-300" />
+            <Link href="/reports" className="hover:text-link transition-colors font-medium">Reports</Link>
+            <CaretRight size={11} weight="bold" className="text-slate-300" />
+            <span aria-current="page" className="text-fg-2 font-semibold truncate max-w-[320px]">{report.name}</span>
+          </nav>
+
+          {/* ══ Report header card ══ */}
+          <div className="bg-card rounded-2xl border border-line shadow-card">
+            <div className="flex items-center gap-4 px-5 py-4 flex-wrap">
               <Tooltip title="Back to Reports">
-                <IconButton size="small" onClick={() => router.push("/reports")}
-                  sx={{ borderRadius:"8px", border:"1.5px solid #E3ECFC", "&:hover":{ bgcolor:"#EFF6FF" } }}>
-                  <ArrowLeft size={17} color="#64748B" weight="duotone" />
+                <IconButton size="small" aria-label="Back to Reports" onClick={() => router.push("/reports")} sx={iconBtn}>
+                  <ArrowLeft size={17} color="var(--fg-2)" weight="bold" />
                 </IconButton>
               </Tooltip>
-              <h1 className="font-heading text-[16px] font-bold text-slate-900">{report.name}</h1>
-              <Tooltip title="Report information">
-                <Info size={15} color="#94A3B8" weight="duotone" className="cursor-pointer hover:text-[#1D4ED8]" />
-              </Tooltip>
-            </div>
 
-            <div className="flex items-center gap-3">
-              <span className="text-[11.5px] text-slate-400 font-medium">{report.updatedAt}</span>
-              <Tooltip title="Refresh">
-                <IconButton size="small" sx={{ borderRadius:"8px", "&:hover":{ bgcolor:"#EFF6FF" } }}>
-                  <ArrowsClockwise size={16} color="#64748B" weight="duotone" />
-                </IconButton>
-              </Tooltip>
-              <div className="flex items-center border border-[#E3ECFC] rounded-xl overflow-hidden shadow-sm">
-                <Button variant="outlined" size="small"
-                  startIcon={<PencilSimple size={13} weight="duotone" />}
-                  onClick={() => router.push("/reports/create")}
-                  sx={{ borderColor:"transparent", borderRadius:0, textTransform:"none", fontWeight:600, fontSize:"0.76rem", color:"#475569", "&:hover":{ bgcolor:"#EFF6FF", color:"#1D4ED8", borderColor:"transparent" } }}>
-                  Edit
-                </Button>
-                <div className="w-px h-6 bg-[#E3ECFC]" />
-                <IconButton size="small" sx={{ borderRadius:0, px:1, "&:hover":{ bgcolor:"#EFF6FF" } }}>
-                  <CaretDown size={12} color="#64748B" weight="duotone" />
-                </IconButton>
-              </div>
-              <Button variant="contained" size="small"
-                startIcon={<ChartBar size={14} weight="duotone" />}
-                sx={{ bgcolor:"#1D4ED8", borderRadius:"9px", textTransform:"none", fontWeight:700, fontSize:"0.76rem", px:2, py:0.8, boxShadow:"0 1px 8px #1D4ED833", "&:hover":{ bgcolor:"#60A5FA" }, "&:active":{ bgcolor:"#0C2472" } }}>
-                Create Chart
-              </Button>
-            </div>
-          </div>
-
-          {/* ══ Sub-toolbar ══ */}
-          <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-[#EFF6FF]">
-            <div className="flex items-center gap-3">
-              <Button variant="outlined" size="small"
-                startIcon={<FunnelSimple size={13} weight="duotone" />}
-                sx={{ borderColor:"#1D4ED8", color:"#1D4ED8", borderRadius:"8px", textTransform:"none", fontWeight:600, fontSize:"0.74rem", bgcolor:"#EFF6FF", "&:hover":{ bgcolor:"#E3ECFC" } }}>
-                Filter
-              </Button>
-              <span className="text-[12px] font-semibold text-slate-700">
-                Total Records : <span className="text-[#1D4ED8]">{report.rows.length}</span>
+              <span className="w-11 h-11 rounded-xl bg-surface ring-1 ring-line flex items-center justify-center flex-shrink-0">
+                <ChartBar size={22} color="var(--link)" weight="duotone" />
               </span>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h1 className="font-heading text-[19px] font-extrabold text-fg tracking-tight truncate">{report.name}</h1>
+                  <Tooltip title="Report information">
+                    <button aria-label="Report information" className="text-fg-3 hover:text-link rounded outline-none focus-visible:ring-2 focus-visible:ring-[#93C5FD]">
+                      <Info size={16} weight="duotone" />
+                    </button>
+                  </Tooltip>
+                </div>
+                <p className="text-[12px] text-fg-3 mt-0.5">{report.updatedAt}</p>
+              </div>
+
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Tooltip title="Refresh">
+                  <IconButton size="small" aria-label="Refresh report" sx={iconBtn}>
+                    <ArrowsClockwise size={16} color="var(--fg-2)" weight="bold" />
+                  </IconButton>
+                </Tooltip>
+
+                {/* Split button: Edit + options */}
+                <div className="flex items-center h-[34px] border border-line rounded-[10px] overflow-hidden bg-card">
+                  <Button size="small" startIcon={<PencilSimple size={14} weight="duotone" />}
+                    onClick={() => router.push("/reports/create")}
+                    sx={{ height:"100%", borderRadius:0, textTransform:"none", fontWeight:600, fontSize:"0.78rem", color:"var(--fg)", px:1.5, "&:hover":{ bgcolor:"var(--surface)", color:"var(--link)" } }}>
+                    Edit
+                  </Button>
+                  <span className="w-px h-5 bg-line" />
+                  <IconButton size="small" aria-label="More edit options" sx={{ height:"100%", borderRadius:0, px:1, "&:hover":{ bgcolor:"var(--surface)" } }}>
+                    <CaretDown size={12} color="var(--fg-2)" weight="bold" />
+                  </IconButton>
+                </div>
+
+                <Button variant="contained" size="small" startIcon={<ChartBar size={15} weight="duotone" />}
+                  sx={{ height:34, bgcolor:"#1D4ED8", color:"#fff", borderRadius:"10px", textTransform:"none", fontWeight:700, fontSize:"0.78rem", px:1.75, boxShadow:"0 1px 8px #1D4ED833", "&:hover":{ bgcolor:"#1E40AF" }, "&:active":{ bgcolor:"#0C2472" } }}>
+                  Create Chart
+                </Button>
+              </div>
             </div>
-            <button
-              onClick={() => setShowDetails(v => !v)}
-              className="flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-[#1D4ED8] transition-colors">
-              Show Details
-              <CaretDown size={12} weight="duotone" className={`transition-transform ${showDetails ? "rotate-180" : ""}`} />
-            </button>
+
+            {/* Sub-toolbar */}
+            <div className="flex items-center justify-between px-5 py-3 border-t border-line-soft">
+              <div className="flex items-center gap-3">
+                <Button variant="outlined" size="small" startIcon={<FunnelSimple size={14} weight="duotone" />}
+                  sx={{ height:32, borderColor:"var(--line)", color:"var(--fg)", bgcolor:"var(--card)", borderRadius:"9px", textTransform:"none", fontWeight:600, fontSize:"0.76rem", "&:hover":{ borderColor:"var(--link)", color:"var(--link)", bgcolor:"var(--surface)" } }}>
+                  Filter
+                </Button>
+                <span className="text-[12.5px] text-fg-2">
+                  <span className="font-bold text-fg tabular-nums">{report.rows.length}</span> {report.rows.length === 1 ? "record" : "records"}
+                </span>
+              </div>
+              <button onClick={() => setShowDetails(v => !v)} aria-expanded={showDetails}
+                className="flex items-center gap-1 text-[12.5px] font-semibold text-fg-2 hover:text-link px-2 py-1 rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#93C5FD]">
+                {showDetails ? "Hide details" : "Show details"}
+                <CaretDown size={12} weight="bold" className={`transition-transform ${showDetails ? "rotate-180" : ""}`} />
+              </button>
+            </div>
           </div>
 
           {/* ══ Results table ══ */}
-          <div className="flex-1 bg-white mx-6 my-4 rounded-2xl border border-[#E3ECFC] shadow-sm overflow-hidden">
+          <section aria-label="Report results" className="bg-card rounded-2xl border border-line shadow-card overflow-clip">
             {report.rows.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-slate-400">
-                <ChartBar size={32} color="#93C5FD" weight="duotone" className="mb-3" />
-                <p className="font-heading text-sm font-semibold text-slate-500">No data to display</p>
-                <p className="text-xs mt-1 text-slate-300">Run the report to see results</p>
+              <div className="py-20 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-surface ring-1 ring-line flex items-center justify-center mx-auto mb-4">
+                  <Table size={24} color="#60A5FA" weight="duotone" />
+                </div>
+                <p className="font-heading text-[14px] font-bold text-fg">No data to display</p>
+                <p className="text-[12.5px] mt-1 text-fg-3">Run the report to see results.</p>
               </div>
             ) : (
               <>
-                {/* Column headers */}
-                <div className="border-b border-[#E3ECFC] bg-[#E3ECFC]">
-                  <div className="grid px-4 py-2.5" style={{ gridTemplateColumns: `repeat(${report.columns.length}, 1fr)` }}>
-                    {report.columns.map(col => (
-                      <div key={col} className="font-heading text-[10.5px] font-bold text-[#0C2472] uppercase tracking-wider">{col}</div>
-                    ))}
-                  </div>
+                <div className="sticky top-[60px] z-10 grid items-center px-5 h-10 bg-surface-subtle border-b border-line" style={{ gridTemplateColumns: template }}>
+                  {report.columns.map((col, j) => (
+                    <div key={col} className={`font-heading text-[11px] font-bold text-fg-2 uppercase tracking-wider truncate pr-3 ${numericCol[j] ? "text-right" : ""}`}>{col}</div>
+                  ))}
                 </div>
-
-                {/* Data rows */}
-                <div className="divide-y divide-[#EFF6FF]">
+                <div className="divide-y divide-line-soft">
                   {report.rows.map((row, i) => (
-                    <div key={i} className="grid px-4 py-3 hover:bg-[#60A5FA]/[0.04] transition-colors"
-                      style={{ gridTemplateColumns: `repeat(${report.columns.length}, 1fr)` }}>
+                    <div key={i} className="grid items-center px-5 min-h-[48px] hover:bg-surface-subtle transition-colors" style={{ gridTemplateColumns: template }}>
                       {row.map((cell, j) => (
-                        <p key={j} className="text-[12.5px] text-slate-700 font-medium">{cell}</p>
+                        <p key={j} className={`text-[13px] truncate pr-3 ${numericCol[j] ? "text-right tabular-nums font-semibold text-fg" : j === 0 ? "font-semibold text-fg" : "text-fg-2"}`}>{cell}</p>
                       ))}
                     </div>
                   ))}
                 </div>
               </>
             )}
-
-            {/* Pagination */}
-            <div className="flex items-center justify-end px-4 py-3 border-t border-[#EFF6FF] gap-4">
-              <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                <span>Rows per page:</span>
-                <button className="flex items-center gap-0.5 bg-[#EFF6FF] text-[#1D4ED8] font-bold px-2 py-1 rounded-lg hover:bg-[#E3ECFC] text-[11px]">
-                  25 <CaretDown size={12} weight="duotone" />
-                </button>
-              </div>
-              <span className="text-[11px] text-slate-500 font-medium">1–{report.rows.length} of {report.rows.length}</span>
-              <div className="flex items-center gap-1">
-                <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8] disabled:opacity-30 font-bold text-sm" disabled>‹</button>
-                <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8] disabled:opacity-30 font-bold text-sm" disabled>›</button>
-              </div>
-            </div>
-          </div>
+            <Pagination shown={report.rows.length} noun={["record", "records"]} pageSize={25} />
+          </section>
         </main>
       </div>
     </div>

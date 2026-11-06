@@ -19,16 +19,16 @@ import { X, User, Envelope, TrendUp, SlidersHorizontal, UserPlus, PencilSimple, 
 const FX = {
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px",
-    backgroundColor: "#EFF6FF",          /* Surface bg */
+    backgroundColor: "var(--surface)",          /* Surface bg */
     fontSize: "0.82rem",
-    "& fieldset": { borderColor: "#E3ECFC", borderWidth: 1.5 }, /* Tint border */
+    "& fieldset": { borderColor: "var(--line)", borderWidth: 1.5 }, /* Tint border */
     "&:hover fieldset": { borderColor: "#60A5FA" },             /* Hover color on hover */
     "&.Mui-focused fieldset": { borderColor: "#1D4ED8", borderWidth: 2 }, /* Primary thick on focus */
     "&.Mui-focused": { boxShadow: "0 0 0 2px #93C5FD" },       /* Soft ring on focus */
     "& input": { padding: "10px 14px" },
   },
   "& .MuiInputLabel-root": { fontSize: "0.79rem", color: "#94A3B8" },
-  "& .MuiInputLabel-root.Mui-focused": { color: "#1D4ED8" },
+  "& .MuiInputLabel-root.Mui-focused": { color: "var(--link)" },
   "& .MuiSelect-select": { fontSize: "0.82rem", padding: "10px 14px" },
 };
 
@@ -44,13 +44,13 @@ function SectionHeader({
 }) {
   return (
     <div className="flex items-center gap-2.5 mb-5">
-      <div className="w-6 h-6 rounded-lg bg-[#EFF6FF] flex items-center justify-center flex-shrink-0">
-        <Icon size={13} color="#1D4ED8" weight="duotone" />
+      <div className="w-6 h-6 rounded-lg bg-surface flex items-center justify-center flex-shrink-0">
+        <Icon size={13} color="var(--link)" weight="duotone" />
       </div>
-      <p className="font-heading text-[10.5px] font-bold text-[#1D4ED8] uppercase tracking-[0.13em] whitespace-nowrap">
+      <p className="font-heading text-[10.5px] font-bold text-link uppercase tracking-[0.13em] whitespace-nowrap">
         {title}
       </p>
-      <div className="flex-1 h-px bg-[#E3ECFC]" />
+      <div className="flex-1 h-px bg-tint" />
     </div>
   );
 }
@@ -132,13 +132,13 @@ export default function NewLeadDrawer({
           width: { xs: "100%", sm: 640 },
           display: "flex",
           flexDirection: "column",
-          bgcolor: "#F8FAFF",
+          bgcolor: "var(--surface-subtle)",
           boxShadow: "-12px 0 48px 0 rgba(12,36,114,0.14)",
         },
       }}
     >
       {/* ══ Sticky Header ══ */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-b border-line flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-[#1D4ED8] flex items-center justify-center shadow-sm">
             {isEdit
@@ -162,11 +162,11 @@ export default function NewLeadDrawer({
             size="small"
             sx={{
               borderRadius: "9px",
-              border: "1.5px solid #E3ECFC",
-              "&:hover": { bgcolor: "#EFF6FF", borderColor: "#60A5FA" },
+              border: "1px solid var(--line)",
+              "&:hover": { bgcolor: "var(--surface)", borderColor: "#60A5FA" },
             }}
           >
-            <X size={17} color="#64748B" weight="duotone" />
+            <X size={17} color="var(--fg-3)" weight="duotone" />
           </IconButton>
         </Tooltip>
       </div>
@@ -175,7 +175,7 @@ export default function NewLeadDrawer({
       <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
 
         {/* ── Section 1: Personal Information ── */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E3ECFC] shadow-sm">
+        <div className="bg-card rounded-2xl p-5 border border-line shadow-sm">
           <SectionHeader icon={User} title="Personal Information" />
 
           {/* Salutation + First + Last */}
@@ -234,7 +234,7 @@ export default function NewLeadDrawer({
         </div>
 
         {/* ── Section 2: Contact Details ── */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E3ECFC] shadow-sm">
+        <div className="bg-card rounded-2xl p-5 border border-line shadow-sm">
           <SectionHeader icon={Envelope} title="Contact Details" />
 
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -288,7 +288,7 @@ export default function NewLeadDrawer({
         </div>
 
         {/* ── Section 3: Lead Details ── */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E3ECFC] shadow-sm">
+        <div className="bg-card rounded-2xl p-5 border border-line shadow-sm">
           <SectionHeader icon={TrendUp} title="Lead Details" />
 
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -374,7 +374,7 @@ export default function NewLeadDrawer({
         </div>
 
         {/* ── Section 4: Preferences ── */}
-        <div className="bg-white rounded-2xl p-5 border border-[#E3ECFC] shadow-sm">
+        <div className="bg-card rounded-2xl p-5 border border-line shadow-sm">
           <SectionHeader icon={SlidersHorizontal} title="Preferences" />
 
           <FormControlLabel
@@ -385,7 +385,7 @@ export default function NewLeadDrawer({
                 size="small"
                 sx={{
                   color: "#CBD5E1",
-                  "&.Mui-checked": { color: "#1D4ED8" },
+                  "&.Mui-checked": { color: "var(--link)" },
                   p: 0.75,
                 }}
               />
@@ -407,10 +407,10 @@ export default function NewLeadDrawer({
       </div>
 
       {/* ══ Sticky Footer ══ */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-t border-line flex-shrink-0">
         <button
           onClick={handleCancel}
-          className="text-[13px] font-semibold text-slate-400 hover:text-slate-600 transition-colors px-3 py-2 rounded-xl hover:bg-[#EFF6FF]"
+          className="text-[13px] font-semibold text-slate-400 hover:text-slate-600 transition-colors px-3 py-2 rounded-xl hover:bg-surface"
         >
           Cancel
         </button>
@@ -421,14 +421,14 @@ export default function NewLeadDrawer({
             size="small"
             onClick={handleCancel}
             sx={{
-              borderColor: "#E3ECFC",
-              color: "#475569",
+              borderColor: "var(--line)",
+              color: "var(--fg-2)",
               borderRadius: "9px",
               textTransform: "none",
               fontWeight: 600,
               fontSize: "0.76rem",
               px: 2,
-              "&:hover": { borderColor: "#60A5FA", color: "#1D4ED8", bgcolor: "#EFF6FF" },
+              "&:hover": { borderColor: "#60A5FA", color: "var(--link)", bgcolor: "var(--surface)" },
             }}
           >
             Save as Draft
@@ -448,7 +448,7 @@ export default function NewLeadDrawer({
               px: 2.5,
               py: 0.9,
               boxShadow: "0 2px 12px 0 #1D4ED833",
-              "&:hover":  { bgcolor: "#60A5FA", boxShadow: "0 4px 18px 0 #60A5FA55" },
+              "&:hover":  { bgcolor: "#1E40AF", boxShadow: "0 4px 18px 0 #60A5FA55" },
               "&:active": { bgcolor: "#0C2472" },
             }}
           >

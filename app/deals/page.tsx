@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Sidebar from "@/components/layout/Sidebar";
 import TopBar from "@/components/layout/TopBar";
 import NewDealDrawer from "@/components/deals/NewDealDrawer";
@@ -10,18 +9,11 @@ import DealKanbanView from "@/components/deals/DealKanbanView";
 import FiltersDrawer, { type FilterRow } from "@/components/leads/FiltersDrawer";
 import ColumnsDrawer from "@/components/leads/ColumnsDrawer";
 import SortPopover, { type SortRow } from "@/components/leads/SortPopover";
-import Checkbox from "@mui/material/Checkbox";
-import Chip from "@mui/material/Chip";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
+import { SortAscending, Columns, Trash, FunnelSimple, TrendUp, UserCheck, ArrowsClockwise } from "@phosphor-icons/react";
 import {
-  Plus, MagnifyingGlass, SlidersHorizontal, SortAscending, Columns,
-  ArrowsDownUp, List, GridFour, Kanban, CaretDown, House, CaretRight,
-  Trash, DotsThreeVertical, FunnelSimple, TrendUp,
-} from "@phosphor-icons/react";
+  PageHeader, ViewToggle, PrimaryButton, ListCard, TabBar, Toolbar, SearchBox, ToolbarButton, ResultCount,
+  BulkBar, TableHeader, TableRow, EmptyState, Pagination, Pill, Empty, gridTemplate, scopedSelection,
+} from "@/components/list/ListParts";
 
 // ─────────────────────────────────────────────
 //  Types
@@ -59,13 +51,13 @@ const ALL_DEALS: Deal[] = [
 //  Stage config
 // ─────────────────────────────────────────────
 const STAGE_CFG: Record<DealStage, { bg: string; text: string; dot: string }> = {
-  "Qualification":            { bg: "#EFF6FF", text: "#0C2472", dot: "#1D4ED8" },
-  "Needs Analysis":           { bg: "#E3ECFC", text: "#1D4ED8", dot: "#3B82F6" },
-  "Value Proposition":        { bg: "#E3ECFC", text: "#0C2472", dot: "#60A5FA" },
-  "Identify Decision Makers": { bg: "#E3ECFC", text: "#1D4ED8", dot: "#0C2472" },
-  "Proposal/Price Quote":     { bg: "#EFF6FF", text: "#0C2472", dot: "#0C2472" },
-  "Negotiation/Review":       { bg: "#FEF3C7", text: "#92400E", dot: "#F59E0B" },
-  "Closed Won":               { bg: "#DCFCE7", text: "#166534", dot: "#10B981" },
+  "Qualification":            { bg: "var(--surface)", text: "var(--ink)", dot: "#1D4ED8" },
+  "Needs Analysis":           { bg: "var(--tint)", text: "var(--link)", dot: "#3B82F6" },
+  "Value Proposition":        { bg: "var(--tint)", text: "var(--ink)", dot: "#60A5FA" },
+  "Identify Decision Makers": { bg: "var(--tint)", text: "var(--link)", dot: "#0C2472" },
+  "Proposal/Price Quote":     { bg: "var(--surface)", text: "var(--ink)", dot: "#0C2472" },
+  "Negotiation/Review":       { bg: "var(--st-amber-bg)", text: "var(--st-amber-fg)", dot: "#F59E0B" },
+  "Closed Won":               { bg: "var(--st-green-bg)", text: "var(--st-green-fg)", dot: "#10B981" },
 };
 
 // ─────────────────────────────────────────────
@@ -79,17 +71,18 @@ const STAGE_TABS = [
 // ─────────────────────────────────────────────
 //  Column definitions
 // ─────────────────────────────────────────────
+// Text columns flex (minmax) so the table fits the card; numbers/dates keep fixed widths.
 const COL_DEFS: { key: string; label: string; width: string }[] = [
-  { key: "dealName",    label: "Deal Name",       width: "1fr"   },
-  { key: "amount",      label: "Amount",          width: "110px" },
-  { key: "accountName", label: "Account Name",    width: "140px" },
-  { key: "stage",       label: "Stage",           width: "180px" },
-  { key: "probability", label: "Probability (%)", width: "110px" },
-  { key: "contactName", label: "Contact Name",    width: "140px" },
-  { key: "createdBy",   label: "Created By",      width: "130px" },
-  { key: "modifiedBy",  label: "Modified By",     width: "130px" },
-  { key: "creation",    label: "Creation",        width: "175px" },
-  { key: "modified",    label: "Modified",        width: "175px" },
+  { key: "dealName",    label: "Deal Name",       width: "minmax(150px,1.3fr)" },
+  { key: "amount",      label: "Amount",          width: "100px"               },
+  { key: "accountName", label: "Account Name",    width: "minmax(100px,0.9fr)" },
+  { key: "stage",       label: "Stage",           width: "minmax(190px,1.3fr)" },
+  { key: "probability", label: "Probability",     width: "100px"               },
+  { key: "contactName", label: "Contact Name",    width: "minmax(100px,0.9fr)" },
+  { key: "createdBy",   label: "Created By",      width: "minmax(100px,0.8fr)" },
+  { key: "modifiedBy",  label: "Modified By",     width: "minmax(100px,0.8fr)" },
+  { key: "creation",    label: "Created",         width: "132px"               },
+  { key: "modified",    label: "Modified",        width: "132px"               },
 ];
 
 const DEFAULT_VISIBLE_COLS = new Set([
@@ -102,14 +95,6 @@ const DEFAULT_VISIBLE_COLS = new Set([
 // ─────────────────────────────────────────────
 const fmt = (n: number) => n === 0 ? "₹0" : `₹${n.toLocaleString("en-IN")}`;
 
-function ColHeader({ label }: { label: string }) {
-  return (
-    <div className="font-heading flex items-center gap-0.5 text-[10.5px] font-bold text-[#0C2472] uppercase tracking-wider cursor-pointer hover:text-[#1D4ED8] transition-colors group select-none">
-      {label}
-      <ArrowsDownUp size={12} weight="duotone" className="opacity-30 group-hover:opacity-100 text-[#60A5FA] transition-opacity" />
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────
 //  Page
@@ -126,6 +111,8 @@ export default function DealsPage() {
   const [columnsOpen, setColumnsOpen] = useState(false);
   const [sortAnchor, setSortAnchor]   = useState<HTMLElement | null>(null);
   const [activeFilters, setActiveFilters] = useState<FilterRow[]>([]);
+  // KNOWN LIMITATION: Sort-menu rules (and Filters-drawer rules) are stored and counted on the
+  // toolbar buttons but NOT applied to `filtered`. Applying them is new functionality and needs separate approval.
   const [activeSorts,   setActiveSorts]   = useState<SortRow[]>([]);
   const [visibleCols, setVisibleCols]     = useState<Set<string>>(new Set(DEFAULT_VISIBLE_COLS));
 
@@ -141,313 +128,125 @@ export default function DealsPage() {
     return matchStage && matchSearch;
   });
 
-  const totalValue = filtered.reduce((s, d) => s + d.amount, 0);
+  const totalValue    = filtered.reduce((s, d) => s + d.amount, 0);
+  const pipelineValue = ALL_DEALS.reduce((s, d) => s + d.amount, 0);
+  const lakhs = (n: number) => `₹${(n / 100000).toFixed(1)}L`;
 
-  const allChecked  = selected.length === filtered.length && filtered.length > 0;
-  const someChecked = selected.length > 0 && !allChecked;
-  const toggleAll   = () => setSelected(allChecked ? [] : filtered.map(d => d.id));
-  const toggleOne   = (id: number) => setSelected(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
+  // Selection is scoped to visible rows
+  const sel = scopedSelection(selected, setSelected, filtered.map(d => d.id));
+  const isFiltered = activeStage !== "All" || !!search;
 
   const visibleColDefs = COL_DEFS.filter(c => visibleCols.has(c.key));
-  const gridTemplate   = ["36px", ...visibleColDefs.map(c => c.width), "40px"].join(" ");
+  const template       = gridTemplate(visibleColDefs.map(c => c.width));
 
   return (
-    <div className="flex h-screen bg-[#EFF6FF] font-sans">
+    <div className="flex h-screen bg-page font-sans">
       <Sidebar />
 
-      <div className="ml-[230px] flex-1 flex flex-col min-h-screen overflow-auto">
+      <div className="ml-[230px] flex-1 flex flex-col min-h-screen overflow-auto bg-canvas">
         <TopBar />
 
         <main className="flex-1 px-6 py-5 space-y-4 animate-fade-in">
-
-          {/* ══ Breadcrumb + Header ══ */}
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-1 text-[11px] text-slate-400 mb-2">
-                <House size={12} weight="duotone" />
-                <CaretRight size={11} weight="duotone" />
-                <Link href="/deals" className="hover:text-[#1D4ED8] transition-colors font-medium">Deals</Link>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="font-heading text-[20px] font-extrabold text-slate-900 tracking-tight">Deals</h1>
-                <span className="text-[11px] font-bold text-slate-400 bg-white border border-[#E3ECFC] px-2 py-0.5 rounded-full shadow-sm">
-                  {ALL_DEALS.length} total
-                </span>
-                {/* Total pipeline value */}
-                <span className="flex items-center gap-1 text-[11px] font-bold text-[#059669] bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">
-                  <TrendUp size={10} weight="duotone" />
-                  Pipeline: ₹{(ALL_DEALS.reduce((s, d) => s + d.amount, 0) / 100000).toFixed(1)}L
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 mt-1">
-              {/* View toggle */}
-              <div className="flex items-center bg-white border border-[#E3ECFC] rounded-xl p-0.5 gap-0.5 shadow-sm">
-                {[
-                  { k: "list",   Icon: List,     label: "List"   },
-                  { k: "grid",   Icon: GridFour, label: "Grid"   },
-                  { k: "kanban", Icon: Kanban,   label: "Kanban" },
-                ].map(({ k, Icon, label }) => (
-                  <button key={k} onClick={() => setView(k as typeof view)}
-                    className={`flex items-center gap-1.5 px-2.5 py-[7px] rounded-lg text-[11.5px] font-semibold transition-all ${
-                      view === k ? "bg-[#EFF6FF] text-[#1D4ED8]" : "text-slate-400 hover:text-slate-600"
-                    }`}>
-                    <Icon size={14} weight="duotone" />{label}
-                  </button>
-                ))}
-              </div>
-
-              <Button variant="contained"
-                startIcon={<Plus size={16} weight="duotone" />}
-                onClick={() => setDrawerOpen(true)}
-                sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.78rem", px: 2, py: 0.85, boxShadow: "0 1px 8px 0 #1D4ED833", "&:hover": { bgcolor: "#60A5FA", boxShadow: "0 2px 14px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" } }}>
-                New Deal
-              </Button>
-            </div>
-          </div>
-
-          {/* ══ Stage filter tabs ══ */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
-            {STAGE_TABS.map(stage => {
-              const cnt    = stageCounts[stage] ?? 0;
-              const active = activeStage === stage;
-              if (stage !== "All" && cnt === 0) return null;
-              return (
-                <button key={stage} onClick={() => setActiveStage(stage)}
-                  className={`flex items-center gap-1.5 px-3 py-[7px] rounded-xl text-[12px] font-semibold whitespace-nowrap transition-all flex-shrink-0 ${
-                    active ? "bg-[#1D4ED8] text-white shadow-sm shadow-[#1D4ED8]/25"
-                           : "bg-[#E3ECFC] text-[#0C2472] hover:bg-[#1D4ED8]/10 hover:text-[#1D4ED8]"
-                  }`}>
-                  {stage}
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold leading-none ${
-                    active ? "bg-white/20 text-white" : "bg-[#1D4ED8]/10 text-[#0C2472]"
-                  }`}>{cnt}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ══ Toolbar ══ */}
-          <div className="flex items-center gap-2.5">
-            {/* Search */}
-            <div className="flex items-center gap-2 bg-[#EFF6FF] border border-[#E3ECFC] rounded-xl px-3 py-2 w-72 focus-within:border-[#1D4ED8] focus-within:border-2 focus-within:shadow-[0_0_0_2px_#93C5FD] transition-all">
-              <MagnifyingGlass size={15} color="#94A3B8" weight="duotone" />
-              <InputBase placeholder="Search by deal name, account…" value={search}
-                onChange={e => setSearch(e.target.value)}
-                sx={{ flex: 1, fontSize: "0.76rem", color: "#334155", "& input::placeholder": { color: "#94A3B8", opacity: 1 } }}
-              />
-              {search && <button onClick={() => setSearch("")} className="text-slate-300 hover:text-slate-500 text-sm">✕</button>}
-            </div>
-
-            {/* Filters */}
-            <Button variant="outlined" size="small"
-              startIcon={activeFilters.length > 0
-                ? <Badge badgeContent={activeFilters.length} color="primary" sx={{ "& .MuiBadge-badge": { fontSize: "0.55rem", height: 14, minWidth: 14 } }}>
-                    <FunnelSimple size={14} weight="duotone" />
-                  </Badge>
-                : <FunnelSimple size={14} weight="duotone" />
-              }
-              onClick={() => setFiltersOpen(true)}
-              sx={{ borderColor: activeFilters.length > 0 ? "#1D4ED8" : "#E3ECFC", color: activeFilters.length > 0 ? "#1D4ED8" : "#475569", bgcolor: activeFilters.length > 0 ? "#EFF6FF" : "transparent", borderRadius: "9px", textTransform: "none", fontWeight: 600, fontSize: "0.74rem", "&:hover": { borderColor: "#1D4ED8", color: "#1D4ED8", bgcolor: "#EFF6FF" } }}>
-              Filters{activeFilters.length > 0 ? ` (${activeFilters.length})` : ""}
-            </Button>
-
-            {/* Columns */}
-            <Button variant="outlined" size="small"
-              startIcon={<Columns size={14} weight="duotone" />}
-              onClick={() => setColumnsOpen(true)}
-              sx={{ borderColor: "#E3ECFC", color: "#475569", borderRadius: "9px", textTransform: "none", fontWeight: 600, fontSize: "0.74rem", "&:hover": { borderColor: "#1D4ED8", color: "#1D4ED8", bgcolor: "#EFF6FF" } }}>
-              Columns
-            </Button>
-
-            {/* Sort */}
-            <Button variant="outlined" size="small"
-              startIcon={<SortAscending size={14} weight="duotone" />}
-              endIcon={<CaretDown size={11} weight="duotone" />}
-              onClick={e => setSortAnchor(e.currentTarget)}
-              sx={{ borderColor: activeSorts.length > 0 ? "#1D4ED8" : "#E3ECFC", color: activeSorts.length > 0 ? "#1D4ED8" : "#475569", bgcolor: activeSorts.length > 0 ? "#EFF6FF" : "transparent", borderRadius: "9px", textTransform: "none", fontWeight: 600, fontSize: "0.74rem", "&:hover": { borderColor: "#1D4ED8", color: "#1D4ED8", bgcolor: "#EFF6FF" } }}>
-              Sort{activeSorts.length > 0 ? ` (${activeSorts.length})` : ""}
-            </Button>
-
-            {/* Filtered value */}
-            <div className="ml-auto flex items-center gap-3">
-              {filtered.length !== ALL_DEALS.length && (
-                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                  ₹{(totalValue / 100000).toFixed(1)}L filtered
-                </span>
-              )}
-              <span className="text-[11px] text-slate-400 font-medium">
-                {filtered.length} of {ALL_DEALS.length} records
+          <PageHeader title="Deals" count={ALL_DEALS.length}
+            badges={
+              <span className="flex items-center gap-1 text-[11.5px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-full tabular-nums">
+                <TrendUp size={12} weight="bold" /> Pipeline {lakhs(pipelineValue)}
               </span>
-            </div>
-          </div>
+            }
+            actions={<>
+              <ViewToggle value={view} onChange={setView} views={["list", "grid", "kanban"]} />
+              <PrimaryButton onClick={() => setDrawerOpen(true)}>New Deal</PrimaryButton>
+            </>} />
 
-          {/* ══ Bulk action bar ══ */}
-          {selected.length > 0 && (
-            <div className="flex items-center gap-3 bg-[#0C2472] text-white px-4 py-2.5 rounded-xl animate-slide-up shadow-lg shadow-[#0C2472]/20">
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-md bg-[#1D4ED8] flex items-center justify-center text-[10px] font-extrabold">{selected.length}</span>
-                <span className="text-[12px] font-semibold">selected</span>
-              </div>
-              <div className="w-px h-4 bg-white/15" />
-              <button className="text-[11.5px] font-semibold text-[#93C5FD] hover:text-white transition-colors">Update Stage</button>
-              <button className="text-[11.5px] font-semibold text-[#93C5FD] hover:text-white transition-colors">Assign Owner</button>
-              <button onClick={() => setSelected([])} className="ml-auto text-[11.5px] font-semibold text-white/50 hover:text-white transition-colors">Clear</button>
-              <button className="flex items-center gap-1.5 text-[11.5px] font-semibold text-red-300 hover:text-red-200 transition-colors">
-                <Trash size={14} weight="duotone" /> Delete
-              </button>
-            </div>
-          )}
+          <ListCard minWidth={1120}>
+            <TabBar label="Deal stage" value={activeStage} onChange={setActiveStage}
+              tabs={STAGE_TABS.filter(s => s === "All" || (stageCounts[s] ?? 0) > 0).map(s => ({ key: s, label: s, count: stageCounts[s] ?? 0 }))} />
 
-          {/* ══ GRID ══ */}
-          {view === "grid" && <DealGridView deals={filtered} />}
-
-          {/* ══ KANBAN ══ */}
-          {view === "kanban" && <DealKanbanView deals={filtered} />}
-
-          {/* ══ LIST ══ */}
-          {view === "list" && (
-            <div className="bg-white rounded-2xl border border-[#E3ECFC] shadow-sm overflow-hidden">
-              {/* Table header */}
-              <div className="grid items-center px-4 py-2.5 bg-[#E3ECFC] border-b border-[#E3ECFC]"
-                style={{ gridTemplateColumns: gridTemplate }}>
-                <Checkbox size="small" checked={allChecked} indeterminate={someChecked} onChange={toggleAll}
-                  sx={{ p: 0.5, color: "#CBD5E1", "&.Mui-checked, &.MuiCheckbox-indeterminate": { color: "#1D4ED8" } }} />
-                {visibleColDefs.map(c => <ColHeader key={c.key} label={c.label} />)}
-                <div />
-              </div>
-
-              {/* Rows */}
-              <div className="divide-y divide-[#EFF6FF]">
-                {filtered.map(deal => {
-                  const isSel = selected.includes(deal.id);
-                  const cfg   = STAGE_CFG[deal.stage] ?? STAGE_CFG["Qualification"];
-
-                  return (
-                    <div key={deal.id}
-                      className={`grid items-center px-4 py-3 transition-all duration-100 cursor-pointer group ${
-                        isSel ? "bg-[#EFF6FF]" : "hover:bg-[#60A5FA]/[0.04]"
-                      }`}
-                      style={{ gridTemplateColumns: gridTemplate }}
-                      onClick={() => router.push(`/deals/${deal.id}`)}>
-
-                      <Checkbox size="small" checked={isSel} onChange={() => toggleOne(deal.id)} onClick={e => e.stopPropagation()}
-                        sx={{ p: 0.5, color: "#CBD5E1", "&.Mui-checked": { color: "#1D4ED8" } }} />
-
-                      {/* Deal Name */}
-                      {visibleCols.has("dealName") && (
-                        <p className="font-heading text-[12.5px] font-semibold text-slate-800 truncate pr-2 group-hover:text-[#1D4ED8] transition-colors">
-                          {deal.name}
-                        </p>
-                      )}
-
-                      {/* Amount */}
-                      {visibleCols.has("amount") && (
-                        <p className="text-[12px] font-bold text-slate-800 truncate pr-2">{fmt(deal.amount)}</p>
-                      )}
-
-                      {/* Account Name */}
-                      {visibleCols.has("accountName") && (
-                        <p className="text-[12px] text-slate-500 truncate pr-2">
-                          {deal.account || <span className="text-slate-200">—</span>}
-                        </p>
-                      )}
-
-                      {/* Stage */}
-                      {visibleCols.has("stage") && (
-                        <div className="pr-2">
-                          <span className="inline-flex items-center gap-1.5 text-[10.5px] font-bold px-2 py-[3px] rounded-full"
-                            style={{ backgroundColor: cfg.bg, color: cfg.text }}>
-                            <span className="w-[5px] h-[5px] rounded-full flex-shrink-0" style={{ backgroundColor: cfg.dot }} />
-                            {deal.stage}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Probability */}
-                      {visibleCols.has("probability") && (
-                        <div className="flex items-center gap-1.5 pr-2">
-                          <div className="w-14 h-1 bg-[#E3ECFC] rounded-full overflow-hidden flex-shrink-0">
-                            <div className="h-full rounded-full" style={{ width: `${deal.probability}%`, backgroundColor: cfg.dot }} />
-                          </div>
-                          <span className="text-[11.5px] text-slate-500 font-medium">{deal.probability}%</span>
-                        </div>
-                      )}
-
-                      {/* Contact Name */}
-                      {visibleCols.has("contactName") && (
-                        <p className="text-[12px] text-slate-500 truncate pr-2">
-                          {deal.contactName || <span className="text-slate-200">—</span>}
-                        </p>
-                      )}
-
-                      {/* Created By */}
-                      {visibleCols.has("createdBy") && (
-                        <p className="text-[11.5px] text-slate-400 truncate pr-2">{deal.createdBy}</p>
-                      )}
-
-                      {/* Modified By */}
-                      {visibleCols.has("modifiedBy") && (
-                        <p className="text-[11.5px] text-slate-400 truncate pr-2">{deal.modifiedBy}</p>
-                      )}
-
-                      {/* Creation */}
-                      {visibleCols.has("creation") && (
-                        <p className="text-[11px] text-slate-400 truncate pr-2">{deal.creation}</p>
-                      )}
-
-                      {/* Modified */}
-                      {visibleCols.has("modified") && (
-                        <p className="text-[11px] text-slate-400 truncate">{deal.modified}</p>
-                      )}
-
-                      {/* Row action */}
-                      <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Tooltip title="Actions">
-                          <IconButton size="small" sx={{ borderRadius: "6px", p: 0.5, "&:hover": { bgcolor: "#E3ECFC" } }}>
-                            <DotsThreeVertical size={15} color="#94A3B8" weight="duotone" />
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Empty state */}
-              {filtered.length === 0 && (
-                <div className="py-16 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-[#EFF6FF] flex items-center justify-center mx-auto mb-3">
-                    <MagnifyingGlass size={22} color="#93C5FD" weight="duotone" />
-                  </div>
-                  <p className="font-heading text-slate-500 text-sm font-semibold">No deals found</p>
-                  <p className="text-slate-300 text-xs mt-1">Try adjusting your search or stage filter</p>
+            <Toolbar bulk={sel.visibleSel.length > 0 ? (
+              <BulkBar count={sel.visibleSel.length} onClear={sel.clear} actions={[
+                { icon: <ArrowsClockwise size={15} weight="duotone" />, label: "Update Stage" },
+                { icon: <UserCheck size={15} weight="duotone" />,       label: "Assign Owner" },
+                { icon: <Trash size={15} weight="duotone" />,           label: "Delete", danger: true },
+              ]} />
+            ) : undefined}>
+              <SearchBox value={search} onChange={setSearch} label="Search deals" placeholder="Search by deal, account or contact" />
+              <ToolbarButton icon={<FunnelSimple size={15} weight="duotone" />} label="Filters"
+                active={activeFilters.length > 0} count={activeFilters.length} onClick={() => setFiltersOpen(true)} />
+              <ToolbarButton icon={<Columns size={15} weight="duotone" />} label="Columns"
+                active={visibleCols.size !== DEFAULT_VISIBLE_COLS.size} onClick={() => setColumnsOpen(true)} />
+              <ToolbarButton icon={<SortAscending size={15} weight="duotone" />} label="Sort" caret
+                active={activeSorts.length > 0} count={activeSorts.length} onClick={e => setSortAnchor(e.currentTarget)} />
+              {isFiltered && (
+                <div className="ml-auto flex items-center gap-3">
+                  <span className="text-[11.5px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-0.5 rounded-full tabular-nums">
+                    {lakhs(totalValue)} in view
+                  </span>
+                  <ResultCount shown={filtered.length} total={ALL_DEALS.length} noun="deals" />
                 </div>
               )}
+            </Toolbar>
 
-              {/* Pagination */}
-              <div className="flex items-center justify-between px-4 py-3 border-t border-[#EFF6FF]">
-                <p className="text-[11px] text-slate-400 font-medium">
-                  Showing <span className="text-slate-700 font-bold">1–{filtered.length}</span> of{" "}
-                  <span className="text-slate-700 font-bold">{ALL_DEALS.length}</span> records
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-                    <span>Rows per page:</span>
-                    <button className="flex items-center gap-0.5 bg-[#EFF6FF] text-[#1D4ED8] font-bold px-2 py-1 rounded-lg hover:bg-[#E3ECFC] transition-colors text-[11px]">
-                      20 <CaretDown size={12} weight="duotone" />
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8] hover:bg-[#E3ECFC] disabled:opacity-30 font-bold text-sm" disabled>‹</button>
-                    <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#1D4ED8] text-white text-[11px] font-bold shadow-sm">1</button>
-                    <button className="w-7 h-7 flex items-center justify-center rounded-lg bg-[#EFF6FF] text-[#1D4ED8] hover:bg-[#E3ECFC] disabled:opacity-30 font-bold text-sm" disabled>›</button>
-                  </div>
+            {view === "list" && (
+              <>
+                <TableHeader template={template} labels={visibleColDefs.map(c => c.label)}
+                  allChecked={sel.allChecked} someChecked={sel.someChecked} onToggleAll={sel.toggleAll} selectAllLabel="Select all deals" />
+
+                <div className="divide-y divide-line-soft">
+                  {filtered.map(deal => {
+                    const cfg = STAGE_CFG[deal.stage] ?? STAGE_CFG["Qualification"];
+                    return (
+                      <TableRow key={deal.id} template={template} name={deal.name}
+                        selected={selected.includes(deal.id)} onToggle={() => sel.toggleOne(deal.id)}
+                        onOpen={() => router.push(`/deals/${deal.id}`)}>
+
+                        {visibleCols.has("dealName") && (
+                          <p className="font-heading text-[13px] font-semibold text-fg truncate pr-3 group-hover:text-link transition-colors">{deal.name}</p>
+                        )}
+                        {visibleCols.has("amount") && (
+                          <p className={`text-[13px] font-bold tabular-nums truncate pr-3 ${deal.amount ? "text-fg" : "text-fg-3"}`}>{fmt(deal.amount)}</p>
+                        )}
+                        {visibleCols.has("accountName") && (
+                          <p className="text-[12.5px] text-fg-2 truncate pr-3">{deal.account || <Empty />}</p>
+                        )}
+                        {visibleCols.has("stage") && (
+                          <div className="pr-3 min-w-0"><Pill bg={cfg.bg} text={cfg.text} dot={cfg.dot}>{deal.stage}</Pill></div>
+                        )}
+                        {visibleCols.has("probability") && (
+                          <div className="flex items-center gap-2 pr-3" aria-label={`${deal.probability}% probability`}>
+                            <div className="w-14 h-1.5 bg-tint rounded-full overflow-hidden flex-shrink-0">
+                              <div className="h-full rounded-full bg-[#3B82F6]" style={{ width: `${deal.probability}%` }} />
+                            </div>
+                            <span className="text-[12px] text-fg-2 font-semibold tabular-nums">{deal.probability}%</span>
+                          </div>
+                        )}
+                        {visibleCols.has("contactName") && (
+                          <p className="text-[12.5px] text-fg-2 truncate pr-3">{deal.contactName || <Empty />}</p>
+                        )}
+                        {visibleCols.has("createdBy") && (
+                          <p className="text-[12px] text-fg-3 truncate pr-3">{deal.createdBy}</p>
+                        )}
+                        {visibleCols.has("modifiedBy") && (
+                          <p className="text-[12px] text-fg-3 truncate pr-3">{deal.modifiedBy}</p>
+                        )}
+                        {visibleCols.has("creation") && (
+                          <p className="text-[12px] text-fg-3 tabular-nums truncate pr-3">{deal.creation}</p>
+                        )}
+                        {visibleCols.has("modified") && (
+                          <p className="text-[12px] text-fg-3 tabular-nums truncate">{deal.modified}</p>
+                        )}
+                      </TableRow>
+                    );
+                  })}
                 </div>
-              </div>
-            </div>
-          )}
+
+                {filtered.length === 0 && <EmptyState title="No deals match" hint="Try a different search term or stage." />}
+                <Pagination shown={filtered.length} noun={["deal", "deals"]} />
+              </>
+            )}
+          </ListCard>
+
+          {view === "grid"   && <DealGridView deals={filtered} />}
+          {view === "kanban" && <DealKanbanView deals={filtered} />}
         </main>
       </div>
 

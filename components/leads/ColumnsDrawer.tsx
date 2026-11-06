@@ -126,13 +126,13 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}
-      PaperProps={{ sx: { width: 420, display: "flex", flexDirection: "column", bgcolor: "#F8FAFF", boxShadow: "-12px 0 48px rgba(12,36,114,0.12)" } }}>
+      PaperProps={{ sx: { width: 420, display: "flex", flexDirection: "column", bgcolor: "var(--surface-subtle)", boxShadow: "-12px 0 48px rgba(12,36,114,0.12)" } }}>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-b border-line flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#EFF6FF] flex items-center justify-center">
-            <Columns size={18} color="#1D4ED8" weight="duotone" />
+          <div className="w-9 h-9 rounded-xl bg-surface flex items-center justify-center">
+            <Columns size={18} color="var(--link)" weight="duotone" />
           </div>
           <div>
             <h2 className="font-heading text-[15px] font-bold text-slate-900 tracking-tight">Configure Columns</h2>
@@ -141,28 +141,28 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
         </div>
         <Tooltip title="Close">
           <IconButton size="small" onClick={onClose}
-            sx={{ borderRadius: "9px", border: "1.5px solid #E3ECFC", "&:hover": { bgcolor: "#EFF6FF" } }}>
-            <X size={17} color="#64748B" weight="duotone" />
+            sx={{ borderRadius: "9px", border: "1px solid var(--line)", "&:hover": { bgcolor: "var(--surface)" } }}>
+            <X size={17} color="var(--fg-3)" weight="duotone" />
           </IconButton>
         </Tooltip>
       </div>
 
       {/* Search + Select All / Clear */}
-      <div className="px-5 pt-4 pb-2 bg-white border-b border-[#EFF6FF] flex-shrink-0 space-y-3">
-        <div className="flex items-center gap-2 bg-[#EFF6FF] border border-[#E3ECFC] rounded-xl px-3 py-1.5">
+      <div className="px-5 pt-4 pb-2 bg-card border-b border-line-soft flex-shrink-0 space-y-3">
+        <div className="flex items-center gap-2 bg-surface border border-line rounded-xl px-3 py-1.5">
           <MagnifyingGlass size={14} color="#94A3B8" weight="duotone" />
           <InputBase
             placeholder="Search columns…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            sx={{ flex: 1, fontSize: "0.77rem", color: "#334155", "& input::placeholder": { color: "#94A3B8", opacity: 1 } }}
+            sx={{ flex: 1, fontSize: "0.77rem", color: "var(--fg)", "& input::placeholder": { color: "#94A3B8", opacity: 1 } }}
           />
-          {search && <button onClick={() => setSearch("")} className="text-slate-300 hover:text-slate-500 text-sm">✕</button>}
+          {search && <button onClick={() => setSearch("")} className="text-fg-3 hover:text-fg text-sm" aria-label="Clear search">✕</button>}
         </div>
 
         <div className="flex items-center gap-2">
           <button onClick={selectAll}
-            className="text-[11.5px] font-semibold text-[#1D4ED8] hover:text-[#0C2472] px-2.5 py-1 rounded-lg hover:bg-[#EFF6FF] transition-colors">
+            className="text-[11.5px] font-semibold text-link hover:text-ink px-2.5 py-1 rounded-lg hover:bg-surface transition-colors">
             Select All
           </button>
           <span className="text-slate-200">·</span>
@@ -172,7 +172,7 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
           </button>
           <span className="text-slate-200">·</span>
           <button onClick={resetDefault}
-            className="text-[11.5px] font-semibold text-slate-400 hover:text-[#1D4ED8] px-2.5 py-1 rounded-lg hover:bg-[#EFF6FF] transition-colors">
+            className="text-[11.5px] font-semibold text-slate-400 hover:text-link px-2.5 py-1 rounded-lg hover:bg-surface transition-colors">
             Reset Default
           </button>
         </div>
@@ -187,27 +187,27 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
           const someOn    = unlocked.some(k => local.has(k));
 
           return (
-            <div key={group} className="bg-white rounded-2xl border border-[#E3ECFC] overflow-hidden shadow-sm">
+            <div key={group} className="bg-card rounded-2xl border border-line overflow-hidden shadow-sm">
               {/* Group header */}
               <button
                 onClick={() => toggleGroup(keys)}
-                className="flex items-center gap-2 w-full px-4 py-2.5 bg-[#EFF6FF] hover:bg-[#E3ECFC] transition-colors border-b border-[#E3ECFC]"
+                className="flex items-center gap-2 w-full px-4 py-2.5 bg-surface hover:bg-tint transition-colors border-b border-line"
               >
                 <Checkbox
                   checked={allOn}
                   indeterminate={!allOn && someOn}
                   size="small"
                   onClick={e => { e.stopPropagation(); toggleGroup(keys); }}
-                  sx={{ p: 0.25, color: "#CBD5E1", "&.Mui-checked, &.MuiCheckbox-indeterminate": { color: "#1D4ED8" } }}
+                  sx={{ p: 0.25, color: "#CBD5E1", "&.Mui-checked, &.MuiCheckbox-indeterminate": { color: "var(--link)" } }}
                 />
-                <span className="font-heading text-[11px] font-bold text-[#1D4ED8] uppercase tracking-wider">{group}</span>
-                <span className="ml-auto text-[10px] text-slate-400 font-medium">
+                <span className="font-heading text-[11px] font-bold text-link uppercase tracking-wider">{group}</span>
+                <span className="ml-auto text-[11px] text-slate-400 font-medium">
                   {unlocked.filter(k => local.has(k)).length} / {unlocked.length}
                 </span>
               </button>
 
               {/* Columns */}
-              <div className="divide-y divide-[#EFF6FF]">
+              <div className="divide-y divide-line-soft">
                 {cols.map(col => {
                   const locked = (col as { locked?: boolean }).locked;
                   const checked = local.has(col.key as string);
@@ -215,7 +215,7 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
                     <label
                       key={col.key}
                       className={`flex items-center gap-3 px-4 py-2 transition-colors ${
-                        locked ? "cursor-default" : "cursor-pointer hover:bg-[#EFF6FF]/60"
+                        locked ? "cursor-default" : "cursor-pointer hover:bg-surface/60"
                       }`}
                     >
                       <Checkbox
@@ -223,13 +223,13 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
                         disabled={locked}
                         size="small"
                         onChange={() => toggle(col.key as string, locked)}
-                        sx={{ p: 0.25, color: "#CBD5E1", "&.Mui-checked": { color: "#1D4ED8" }, "&.Mui-disabled": { color: "#CBD5E1" } }}
+                        sx={{ p: 0.25, color: "#CBD5E1", "&.Mui-checked": { color: "var(--link)" }, "&.Mui-disabled": { color: "#CBD5E1" } }}
                       />
                       <span className={`text-[12.5px] flex-1 truncate ${locked ? "text-slate-400" : "text-slate-700"}`}>
                         {col.label}
                       </span>
                       {locked && (
-                        <span className="text-[9.5px] font-bold text-slate-300 uppercase tracking-wider">Locked</span>
+                        <span className="text-[10.5px] font-bold text-fg-3 uppercase tracking-wider">Locked</span>
                       )}
                     </label>
                   );
@@ -245,14 +245,14 @@ export default function ColumnsDrawer({ open, onClose, selected, onChange }: Pro
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-[#E3ECFC] flex-shrink-0">
+      <div className="flex items-center justify-between px-6 py-4 bg-card border-t border-line flex-shrink-0">
         <button onClick={onClose}
-          className="text-[13px] font-semibold text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-[#EFF6FF] transition-colors">
+          className="text-[13px] font-semibold text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-surface transition-colors">
           Cancel
         </button>
         <Button variant="contained" size="small" startIcon={<Columns size={14} weight="duotone" />}
           onClick={handleApply}
-          sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.78rem", px: 2.5, py: 0.9, boxShadow: "0 2px 12px #1D4ED833", "&:hover": { bgcolor: "#60A5FA", boxShadow: "0 2px 14px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" } }}>
+          sx={{ bgcolor: "#1D4ED8", borderRadius: "9px", textTransform: "none", fontWeight: 700, fontSize: "0.78rem", px: 2.5, py: 0.9, boxShadow: "0 2px 12px #1D4ED833", "&:hover": { bgcolor: "#1E40AF", boxShadow: "0 2px 14px #60A5FA55" }, "&:active": { bgcolor: "#0C2472" } }}>
           Apply Columns
         </Button>
       </div>

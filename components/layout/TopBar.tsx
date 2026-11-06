@@ -9,18 +9,22 @@ import Avatar from "@mui/material/Avatar";
 import { MagnifyingGlass, Bell, Plus, Command } from "@phosphor-icons/react";
 import { OWNER_AVATARS } from "@/lib/avatars";
 
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
 export default function TopBar({ title }: { title?: string }) {
   const [search, setSearch] = useState("");
 
-  const today = new Date().toLocaleDateString("en-IN", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  // Formatted manually: toLocaleDateString output differs between Node's ICU
+  // and the browser's, which caused a hydration mismatch.
+  const now = new Date();
+  const today = `${WEEKDAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 h-[60px] flex items-center gap-4">
+    <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-md border-b border-slate-100 px-6 h-[60px] flex items-center gap-4">
       {/* Left */}
       <div className="flex-1">
         {title ? (
@@ -34,7 +38,7 @@ export default function TopBar({ title }: { title?: string }) {
       </div>
 
       {/* Search */}
-      <div className="flex items-center gap-2 bg-[#EFF6FF] border border-[#E3ECFC] rounded-xl px-3 py-1.5 w-60 group focus-within:border-[#1D4ED8] focus-within:shadow-[0_0_0_2px_#93C5FD] transition-all">
+      <div className="flex items-center gap-2 bg-surface border border-line rounded-xl px-3 py-1.5 w-60 group focus-within:border-[#1D4ED8] focus-within:shadow-[0_0_0_2px_#93C5FD] transition-all">
         <MagnifyingGlass size={15} color="#94A3B8" weight="duotone" />
         <InputBase
           placeholder="Search leads, deals..."
@@ -43,12 +47,12 @@ export default function TopBar({ title }: { title?: string }) {
           sx={{
             flex: 1,
             fontSize: "0.78rem",
-            color: "#334155",
+            color: "var(--fg)",
             "& input::placeholder": { color: "#94A3B8", opacity: 1 },
           }}
         />
         <Tooltip title="⌘K">
-          <Command size={13} color="#CBD5E1" weight="duotone" />
+          <Command size={13} color="var(--fg-3)" weight="duotone" />
         </Tooltip>
       </div>
 
@@ -66,7 +70,7 @@ export default function TopBar({ title }: { title?: string }) {
           px: 2,
           py: 0.9,
           boxShadow: "0 1px 8px 0 #1D4ED833",
-          "&:hover":  { bgcolor: "#60A5FA", boxShadow: "0 2px 14px 0 #60A5FA55" },
+          "&:hover":  { bgcolor: "#1E40AF", boxShadow: "0 2px 14px 0 #1D4ED844" },
           "&:active": { bgcolor: "#0C2472" },
         }}
       >
@@ -75,13 +79,13 @@ export default function TopBar({ title }: { title?: string }) {
 
       {/* Notifications */}
       <Tooltip title="3 unread notifications">
-        <IconButton size="small" sx={{ borderRadius: "8px", "&:hover": { bgcolor: "#F1F5F9" } }}>
+        <IconButton size="small" sx={{ borderRadius: "8px", "&:hover": { bgcolor: "var(--surface-subtle)" } }}>
           <Badge
             badgeContent={3}
             color="error"
             sx={{ "& .MuiBadge-badge": { fontSize: "0.58rem", height: 15, minWidth: 15, padding: "0 3px" } }}
           >
-            <Bell size={20} color="#64748B" weight="duotone" />
+            <Bell size={20} color="var(--fg-3)" weight="duotone" />
           </Badge>
         </IconButton>
       </Tooltip>

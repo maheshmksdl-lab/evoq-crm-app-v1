@@ -28,11 +28,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     ? 0
     : (((payload[0].value - data[0].revenue) / data[0].revenue) * 100).toFixed(1);
   return (
-    <div className="bg-slate-900 text-white px-4 py-2.5 rounded-2xl text-xs shadow-2xl border border-white/10">
-      <p className="text-slate-400 mb-1 text-[11px]">{label}</p>
+    <div className="bg-[#0C2472] text-white px-4 py-2.5 rounded-2xl text-xs shadow-2xl border border-white/10">
+      <p className="text-[#A9B8D6] mb-1 text-[11px]">{label}</p>
       <p className="font-extrabold text-[17px] tracking-tight">{fmt(payload[0].value)}</p>
       {Number(pct) !== 0 && (
-        <p className="text-emerald-400 text-[10px] mt-0.5">+{pct}% vs Dec</p>
+        <p className="text-emerald-400 text-[11px] mt-0.5">+{pct}% vs Dec</p>
       )}
     </div>
   );
@@ -42,7 +42,7 @@ export default function RevenueChart() {
   const avg = data.reduce((s, d) => s + d.revenue, 0) / data.length;
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm h-full">
+    <div className="bg-card rounded-2xl p-5 border border-slate-100 shadow-sm h-full">
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
@@ -58,17 +58,17 @@ export default function RevenueChart() {
 
       <ResponsiveContainer width="100%" height={210}>
         <AreaChart data={data} margin={{ top: 10, right: 8, left: -8, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
-          <ReferenceLine y={avg} stroke="#E2E8F0" strokeDasharray="4 3" label={{ value: "avg", fontSize: 9, fill: "#94A3B8" }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--line-soft)" vertical={false} />
+          <ReferenceLine y={avg} stroke="var(--line)" strokeDasharray="4 3" label={{ value: "avg", fontSize: 9, fill: "var(--fg-3)" }} />
           <XAxis
             dataKey="month"
-            tick={{ fontSize: 11, fill: "#94A3B8", fontWeight: 500 }}
+            tick={{ fontSize: 11, fill: "var(--fg-3)", fontWeight: 500 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
             tickFormatter={fmt}
-            tick={{ fontSize: 11, fill: "#94A3B8" }}
+            tick={{ fontSize: 11, fill: "var(--fg-3)" }}
             axisLine={false}
             tickLine={false}
             width={46}
@@ -85,7 +85,7 @@ export default function RevenueChart() {
             fill="#3B82F6"
             fillOpacity={0.07}
             dot={false}
-            activeDot={{ r: 5, fill: "#3B82F6", stroke: "#fff", strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: "#3B82F6", stroke: "var(--card)", strokeWidth: 2 }}
           />
         </AreaChart>
       </ResponsiveContainer>

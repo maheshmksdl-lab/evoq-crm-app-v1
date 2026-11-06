@@ -16,11 +16,11 @@ interface Deal {
 const STAGES: { key: DealStage; label: string; headerBg: string; dot: string }[] = [
   { key: "Qualification",            label: "Qualification",            headerBg: "#0C2472", dot: "#1D4ED8" },
   { key: "Needs Analysis",           label: "Needs Analysis",           headerBg: "#1D4ED8", dot: "#3B82F6" },
-  { key: "Value Proposition",        label: "Value Proposition",        headerBg: "#3B82F6", dot: "#60A5FA" },
-  { key: "Identify Decision Makers", label: "Identify Decision Makers", headerBg: "#60A5FA", dot: "#93C5FD" },
+  { key: "Value Proposition",        label: "Value Proposition",        headerBg: "#2563EB", dot: "#60A5FA" },
+  { key: "Identify Decision Makers", label: "Identify Decision Makers", headerBg: "#1E40AF", dot: "#93C5FD" },
   { key: "Proposal/Price Quote",     label: "Proposal / Price Quote",   headerBg: "#0C2472", dot: "#1D4ED8" },
   { key: "Negotiation/Review",       label: "Negotiation / Review",     headerBg: "#B45309", dot: "#F59E0B" },
-  { key: "Closed Won",               label: "Closed Won",               headerBg: "#059669", dot: "#10B981" },
+  { key: "Closed Won",               label: "Closed Won",               headerBg: "#047857", dot: "#10B981" },
 ];
 
 const AVATAR_PAL = ["#0C2472", "#1D4ED8", "#3B82F6", "#60A5FA"];
@@ -51,19 +51,19 @@ export default function DealKanbanView({ deals }: Props) {
               <div className="px-3 py-2.5 flex items-center justify-between" style={{ backgroundColor: col.headerBg }}>
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-heading text-[11.5px] font-bold text-white truncate">{col.label}</span>
-                  <span className="text-[10px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded-full flex-shrink-0">
+                  <span className="text-[11px] font-bold bg-card/20 text-white px-1.5 py-0.5 rounded-full flex-shrink-0">
                     {colDeals.length}
                   </span>
                 </div>
                 <button onClick={e => e.stopPropagation()}
-                  className="w-6 h-6 rounded-lg bg-white/15 hover:bg-white/30 flex items-center justify-center transition-colors flex-shrink-0 ml-1">
+                  className="w-6 h-6 rounded-lg bg-card/15 hover:bg-card/30 flex items-center justify-center transition-colors flex-shrink-0 ml-1">
                   <Plus size={13} color="white" weight="duotone" />
                 </button>
               </div>
               {/* Total amount */}
-              <div className="px-3 py-1.5 bg-white border-x border-b rounded-b-none border-[#E3ECFC]" style={{ borderTop: `2px solid ${col.dot}` }}>
-                <p className="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                  <CurrencyDollar size={10} color="#93C5FD" weight="duotone" />
+              <div className="px-3 py-1.5 bg-card border-x border-b rounded-b-none border-line" style={{ borderTop: `2px solid ${col.dot}` }}>
+                <p className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
+                  <CurrencyDollar size={10} color="#60A5FA" weight="duotone" />
                   Total: <span className="font-bold text-slate-600 ml-0.5">{fmtTotal(total)}</span>
                 </p>
               </div>
@@ -72,7 +72,7 @@ export default function DealKanbanView({ deals }: Props) {
             {/* Deal cards */}
             <div className="flex-1 space-y-2.5 overflow-y-auto" style={{ maxHeight: "calc(100vh - 360px)" }}>
               {colDeals.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-8 rounded-xl border-2 border-dashed text-slate-300 text-[11px] text-center"
+                <div className="flex flex-col items-center justify-center py-8 rounded-xl border-2 border-dashed border-line-strong text-fg-3 text-[12px] text-center"
                   style={{ borderColor: col.dot + "60" }}>
                   <Plus size={20} color={col.dot} weight="duotone" className="mb-1 opacity-40" />
                   No deals
@@ -84,19 +84,19 @@ export default function DealKanbanView({ deals }: Props) {
                 return (
                   <div key={deal.id}
                     onClick={() => router.push(`/deals/${deal.id}`)}
-                    className="bg-white rounded-xl border border-[#E3ECFC] p-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-[#60A5FA] transition-all cursor-pointer group"
+                    className="bg-card rounded-xl border border-line p-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-[#60A5FA] transition-all cursor-pointer group"
                   >
                     {/* Amount */}
-                    <p className="font-heading text-[14px] font-extrabold text-[#0C2472] mb-1">{fmt(deal.amount)}</p>
+                    <p className="font-heading text-[14px] font-extrabold text-ink mb-1">{fmt(deal.amount)}</p>
 
                     {/* Deal name */}
-                    <p className="font-heading text-[12px] font-bold text-slate-800 truncate group-hover:text-[#1D4ED8] transition-colors leading-tight mb-2">
+                    <p className="font-heading text-[12px] font-bold text-slate-800 truncate group-hover:text-link transition-colors leading-tight mb-2">
                       {deal.name}
                     </p>
 
                     {/* Probability mini-bar */}
                     {deal.probability > 0 && (
-                      <div className="w-full h-0.5 bg-[#E3ECFC] rounded-full mb-2 overflow-hidden">
+                      <div className="w-full h-0.5 bg-tint rounded-full mb-2 overflow-hidden">
                         <div className="h-full rounded-full" style={{ width: `${deal.probability}%`, backgroundColor: col.dot }} />
                       </div>
                     )}
@@ -105,25 +105,25 @@ export default function DealKanbanView({ deals }: Props) {
                     <div className="space-y-1 mb-2.5">
                       {deal.account && (
                         <div className="flex items-center gap-1 text-[10.5px] text-slate-400 truncate">
-                          <Buildings size={10} color="#CBD5E1" weight="duotone" className="flex-shrink-0" />
+                          <Buildings size={10} color="var(--fg-3)" weight="duotone" className="flex-shrink-0" />
                           <span className="truncate">{deal.account}</span>
                         </div>
                       )}
                       {deal.contactName && (
                         <div className="flex items-center gap-1 text-[10.5px] text-slate-400 truncate">
-                          <User size={10} color="#CBD5E1" weight="duotone" className="flex-shrink-0" />
+                          <User size={10} color="var(--fg-3)" weight="duotone" className="flex-shrink-0" />
                           <span className="truncate">{deal.contactName}</span>
                         </div>
                       )}
                     </div>
 
                     {/* Footer */}
-                    <div className="flex items-center gap-1.5 pt-2 border-t border-[#EFF6FF]">
+                    <div className="flex items-center gap-1.5 pt-2 border-t border-line-soft">
                       <Tooltip title={deal.owner}>
                         <Avatar sx={{ width: 16, height: 16, bgcolor: owCol, fontSize: "0.45rem", fontWeight: 800 }}>{owInit}</Avatar>
                       </Tooltip>
-                      <span className="text-[10px] text-slate-400 truncate">{deal.owner}</span>
-                      <span className="ml-auto text-[9.5px] text-slate-300">{deal.probability}%</span>
+                      <span className="text-[11px] text-slate-400 truncate">{deal.owner}</span>
+                      <span className="ml-auto text-[10.5px] text-fg-3">{deal.probability}%</span>
                     </div>
                   </div>
                 );
@@ -131,7 +131,7 @@ export default function DealKanbanView({ deals }: Props) {
             </div>
 
             {/* Add deal */}
-            <button className="flex items-center gap-1.5 mt-3 px-2 py-2 rounded-xl border border-dashed text-[11.5px] font-medium w-full transition-colors text-slate-400 hover:text-[#1D4ED8] hover:bg-[#EFF6FF]"
+            <button className="flex items-center gap-1.5 mt-3 px-2 py-2 rounded-xl border border-dashed text-[11.5px] font-medium w-full transition-colors text-slate-400 hover:text-link hover:bg-surface"
               style={{ borderColor: col.dot + "60" }}>
               <Plus size={13} weight="duotone" />
               Add deal

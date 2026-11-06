@@ -42,7 +42,7 @@ export default function KPICard({
   const lineColor = isPositive ? "#10B981" : "#EF4444";
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm relative overflow-hidden hover:shadow-md hover:-translate-y-px transition-all duration-200 cursor-default">
+    <div className="bg-card rounded-2xl p-5 border border-slate-100 shadow-sm relative overflow-hidden hover:shadow-md hover:-translate-y-px transition-all duration-200 cursor-default">
       {/* ── Coloured top-border ── */}
       <div
         className="absolute top-0 left-0 right-0 h-[3px] rounded-t-2xl"
